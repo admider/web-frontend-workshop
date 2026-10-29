@@ -1,0 +1,704 @@
+/* ================================================================
+   超链接与伪类专属样式
+   ================================================================ */
+
+.section-panel { display: none !important; }
+.section-panel.active { display: block !important; animation: fadeIn 0.35s ease; }
+
+.sidebar-nav-item.active {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    font-weight: 600;
+}
+
+/* ================================================================
+   模块 1：模拟浏览器
+   ================================================================ */
+.mock-browser-bar {
+    background: #e2e8f0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #cbd5e1;
+    flex-shrink: 0;
+}
+.mock-dots { display: flex; gap: 6px; }
+.mock-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.mock-dots span:nth-child(1) { background: #ef4444; }
+.mock-dots span:nth-child(2) { background: #f59e0b; }
+.mock-dots span:nth-child(3) { background: #10b981; }
+
+.mock-address-bar {
+    background: #fff;
+    flex: 1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #475569;
+    font-family: var(--font-mono);
+    border: 1px solid #cbd5e1;
+}
+
+.mock-default-link {
+    color: #0000EE !important;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+
+.mock-default-link.is-visited {
+    color: #551A8B !important; 
+}
+
+/* 锚点链接样式修复：加深颜色，不再看不清 */
+.mock-anchor-link {
+    color: #1d4ed8; /* 深蓝色 */
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    border-bottom: 2px dashed #93c5fd;
+    transition: all 0.2s;
+    padding-bottom: 2px;
+    cursor: pointer;
+}
+.mock-anchor-link:hover {
+    color: #2563eb;
+    border-bottom-style: solid;
+    border-bottom-color: #2563eb;
+}
+.mock-anchor-link:active {
+    color: #dc2626;
+}
+
+.mock-anchor-target {
+    transition: all 0.4s ease;
+    scroll-margin-top: 20px;
+}
+.mock-anchor-target.highlight {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5);
+    transform: scale(1.02);
+}
+
+.browser-overlay-tip {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.95);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border: 1px solid var(--accent-cyan);
+    max-width: 80%;
+    text-align: center;
+}
+.browser-overlay-tip.show {
+    opacity: 1;
+    transform: translate(-50%, 10px);
+}
+
+/* ================================================================
+   模块 2：进阶伪类与场景画廊
+   ================================================================ */
+
+/* 1. 基础链接：完全原生状态 */
+.advanced-demo-link {
+    font-size: 20px;
+    font-weight: 600;
+    color: #0000EE; /* 原生蓝 */
+    text-decoration: underline; /* 原生下划线 */
+    cursor: pointer;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* 原生点击红色 (注意这里用 !important 防止被覆盖) */
+.advanced-demo-link:active {
+    color: #FF0000 !important;
+}
+
+/* 强行模拟访问后的紫色 */
+.advanced-demo-link.is-visited {
+    color: #551A8B !important;
+}
+
+/* 错误顺序强行覆盖 */
+.advanced-demo-link.order-wrong.is-visited {
+    color: #551A8B !important; 
+}
+
+/* ================================================================
+   积木叠加状态类
+   ================================================================ */
+
+/* 去除下划线 */
+.advanced-demo-link.step-no-underline {
+    text-decoration: none;
+}
+
+/* 设置基础颜色与字体 (原生的link被覆盖) */
+.advanced-demo-link.step-base-style {
+    color: #f8fafc !important; /* 柔和的亮白色 */
+    font-family: var(--font-mono); /* 更换字体 */
+    font-style: italic; /* 倾斜 */
+}
+
+/* 悬停变色 (自定义伪类) */
+.advanced-demo-link.step-hover-color:hover {
+    color: #06b6d4 !important; 
+}
+
+/* 悬停上浮 */
+.advanced-demo-link.step-hover-lift:hover {
+    transform: translateY(-3px);
+}
+
+/* 添加背景与内边距 */
+.advanced-demo-link.step-bg-padding {
+    padding: 10px 24px;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* 点击缩放 */
+.advanced-demo-link.step-active-scale:active {
+    transform: scale(0.95) !important;
+}
+
+/* ================================================================
+   错误顺序覆盖演示
+   ================================================================ */
+/* 如果处于错误顺序状态，强制让:hover的变色失效 (被visited覆盖) */
+.advanced-demo-link.order-wrong.step-hover-color.is-visited:hover {
+    color: #551A8B !important; 
+}
+
+
+/* ================================================================
+   扩展元素演示
+   ================================================================ */
+.ext-demo-btn, .ext-demo-li {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--bg-tertiary);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+}
+.ext-demo-btn.is-hover:hover, .ext-demo-li.is-hover:hover {
+    background: rgba(6, 182, 212, 0.15);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
+.ext-demo-btn.is-active:active, .ext-demo-li.is-active:active {
+    transform: translateY(2px) scale(0.98);
+    background: rgba(236, 72, 153, 0.15);
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+/* 代码片段框 */
+.code-snippet {
+    background: #0a0f1a;
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 8px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border: 1px solid var(--bg-tertiary);
+    line-height: 1.5;
+}
+
+/* ================================================================
+   高级场景画廊
+   ================================================================ */
+.case-card { 
+    background: var(--bg-secondary); 
+    border: 1px solid var(--bg-tertiary); 
+    border-radius: var(--radius-md); 
+    padding: 16px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+.case-title { 
+    font-size: 14px; 
+    font-weight: 700; 
+    color: var(--accent-orange); 
+    letter-spacing: 0.5px;
+    font-family: var(--font-sans);
+}
+.case-demo-box { 
+    height: 120px; 
+    border-radius: var(--radius-sm); 
+    border: 1px dashed var(--bg-tertiary); 
+}
+
+/* 场景 1 */
+.scene-link-1 { 
+    color: #f8fafc; 
+    text-decoration: none; 
+    font-size: 18px; 
+    font-weight: 500; 
+    letter-spacing: 1.5px; 
+    font-family: var(--font-sans);
+    position: relative; 
+    padding-bottom: 6px; 
+}
+.scene-link-1::after { 
+    content: ''; 
+    position: absolute; 
+    bottom: 0; 
+    left: 50%; 
+    width: 0; 
+    height: 2px; 
+    background: var(--accent-cyan); 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    transform: translateX(-50%); 
+}
+.scene-link-1:hover { color: var(--accent-cyan); }
+.scene-link-1:hover::after { width: 100%; }
+
+/* 场景 2 */
+.scene-link-2 { 
+    color: var(--accent-cyan); 
+    text-decoration: none; 
+    font-size: 15px; 
+    font-weight: 600; 
+    letter-spacing: 1px;
+    font-family: var(--font-sans);
+    padding: 10px 28px; 
+    border: 2px solid var(--accent-cyan); 
+    border-radius: 4px;
+    background-image: linear-gradient(var(--accent-cyan), var(--accent-cyan)); 
+    background-repeat: no-repeat; 
+    background-size: 0% 100%; 
+    background-position: left; 
+    transition: all 0.4s ease; 
+}
+.scene-link-2:hover { 
+    background-size: 100% 100%; 
+    color: #0f172a; 
+}
+
+/* 场景 3 */
+.scene-link-3 { 
+    color: #f8fafc; 
+    text-decoration: none; 
+    font-size: 15px; 
+    font-weight: 600; 
+    letter-spacing: 1px;
+    font-family: var(--font-sans);
+    padding: 12px 32px; 
+    position: relative; 
+    background: #0f172a; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    z-index: 1; 
+}
+.scene-link-3::before { 
+    content: ''; 
+    position: absolute; 
+    inset: -50%; 
+    background: conic-gradient(transparent, var(--accent-pink), transparent 30%); 
+    animation: rotateGlow 4s linear infinite; 
+    z-index: -2; 
+    opacity: 0; 
+    transition: opacity 0.3s; 
+}
+.scene-link-3::after { 
+    content: ''; 
+    position: absolute; 
+    inset: 2px; 
+    background: #0f172a; 
+    border-radius: 6px; 
+    z-index: -1; 
+}
+.scene-link-3:hover::before { opacity: 1; }
+.scene-link-3:hover { color: var(--accent-pink); text-shadow: 0 0 8px rgba(236,72,153,0.5); }
+@keyframes rotateGlow { 100% { transform: rotate(360deg); } }
+
+
+/* ================================================================
+   模块 3：焦点与交互伪类百宝箱（特效加强版）
+   ================================================================ */
+
+/* 知识卡片解释区 */
+.explain-box {
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid var(--bg-tertiary);
+    border-left: 3px solid var(--accent-cyan);
+    animation: fadeIn 0.3s ease;
+}
+.explain-box p { font-size: 12px; color: #cbd5e1; margin-bottom: 6px; line-height: 1.5; }
+.explain-box strong { color: var(--accent-cyan); }
+.explain-box .code-output { font-size: 11px; padding: 8px; background: #0a0f1a; border-radius: 4px; margin-top: 8px; color: var(--accent-cyan); border: none; }
+
+/* 通用组件重置 */
+.focus-btn, .focus-input, .not-btn-1, .not-btn-2, .no-style-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 2px solid var(--bg-tertiary);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+.focus-input { outline: none; }
+
+/* ================================================================
+   1. 焦点交互
+   ================================================================ */
+@keyframes pulseCyan {
+    0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(6, 182, 212, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+}
+@keyframes pulseOrange {
+    0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* 注意：类名与原生的绑定发生了互换 */
+.focus-btn.focus-active:focus {
+    border-color: var(--accent-orange);
+    outline: none;
+    animation: pulseOrange 1.5s infinite;
+}
+.focus-input.focus-visible-active:focus-visible {
+    border-color: var(--accent-cyan);
+    background: rgba(6, 182, 212, 0.05);
+    animation: pulseCyan 1.5s infinite;
+}
+
+/* ================================================================
+   2. 目标与否定特效
+   ================================================================ */
+@keyframes targetGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(236, 72, 153, 0.3); transform: scale(1); }
+    50% { box-shadow: 0 0 30px rgba(236, 72, 153, 0.8); transform: scale(1.02); }
+}
+.target-block.target-active:target {
+    background: rgba(236, 72, 153, 0.15);
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+    font-weight: bold;
+    animation: targetGlow 2s infinite;
+}
+
+/* 给 :not 选中的按钮和发光 */
+@keyframes blueGlow {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+    50% { box-shadow: 0 0 20px 5px rgba(59, 130, 246, 0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+/* 同时选中 button 和 a，应用蓝底和波纹特效 */
+button.not-active:not(.no-style-btn), 
+a.not-active:not(.no-style-btn) {
+    background: #3b82f6 !important;
+    color: white !important;
+    border-color: #3b82f6 !important;
+    animation: blueGlow 2s infinite;
+}
+
+/* ================================================================
+   3. 结构伪类
+   ================================================================ */
+.struct-list li {
+    transition: all 0.3s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border-left: 3px solid transparent;
+}
+
+/* nth-child 特效 */
+.struct-list.nth-active li:nth-child(odd) { 
+    background: rgba(59, 130, 246, 0.15); 
+    color: #3b82f6;
+    box-shadow: inset 4px 0 10px -4px #3b82f6;
+}
+.struct-list.nth-active li:nth-child(even) { 
+    background: rgba(139, 92, 246, 0.15); 
+    color: #8b5cf6;
+    box-shadow: inset 4px 0 10px -4px #8b5cf6;
+}
+
+/* first/last 特效 */
+.struct-list.firstlast-active li:first-child {
+    color: var(--accent-pink);
+    border-left-color: var(--accent-pink);
+    font-weight: bold;
+    box-shadow: inset 4px 0 10px -4px var(--accent-pink);
+}
+.struct-list.firstlast-active li:last-child {
+    color: var(--accent-green);
+    border-left-color: var(--accent-green);
+    font-style: italic;
+    box-shadow: inset 4px 0 10px -4px var(--accent-green);
+}
+
+/* ================================================================
+   4. 语言状态
+   ================================================================ */
+.lang-text {
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: all 0.5s ease;
+    margin-bottom: 8px;
+    font-size: 14px;
+    border: 1px solid transparent;
+}
+.lang-text.lang-active:lang(zh-CN) {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+    box-shadow: inset 4px 0 10px -4px var(--accent-green);
+}
+.lang-text.lang-active:lang(en) {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    font-style: italic;
+    box-shadow: inset 4px 0 10px -4px var(--accent-purple);
+}
+
+/* ================================================================
+   飞行光球与扩散特效（核心动画库）
+   ================================================================ */
+.flying-orb {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle, #fff, var(--accent-cyan));
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-cyan), 0 0 30px var(--accent-cyan);
+    z-index: 9999;
+    pointer-events: none;
+    transition: all 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+/* 爆炸扩散特效 */
+@keyframes burstExpand {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(5); opacity: 0; }
+}
+.burst-ring {
+    position: fixed;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--burst-color, var(--accent-cyan));
+    z-index: 9998;
+    pointer-events: none;
+    animation: burstExpand 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    box-shadow: 0 0 10px var(--burst-color, var(--accent-cyan));
+}
+
+/* ================================================================
+   模块 4：高级交互
+   ================================================================ */
+.case-underline {
+    position: relative;
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    padding-bottom: 4px;
+}
+.case-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent-cyan);
+    transition: width 0.3s ease;
+}
+.case-underline:hover::after {
+    width: 100%;
+}
+.case-button {
+    display: inline-block;
+    padding: 12px 32px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: all 0.1s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+.case-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+}
+.case-target {
+    padding: 20px;
+    background: var(--bg-secondary);
+    border: 2px dashed var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    transition: all 0.4s ease;
+    margin: 0 auto;
+    max-width: 300px;
+}
+.case-target:target {
+    background: rgba(236, 72, 153, 0.1);
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+/* 代码框复用 */
+.live-code-wrapper {
+    background: #0a0f1a;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--bg-tertiary);
+    overflow: hidden;
+}
+.live-code-title {
+    background: rgba(255,255,255,0.05);
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+.live-code-wrapper .code-output {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    padding: 12px;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+}
+.live-code-wrapper .code-output pre { margin: 0; white-space: pre-wrap; }
+.live-code-wrapper .sel { color: var(--accent-cyan); }
+.live-code-wrapper .prop { color: var(--accent-pink); }
+.live-code-wrapper .val { color: var(--accent-orange); }
+
+/* ================================================================
+   模块 5：超链接可放置的内容
+   ================================================================ */
+
+/* 通用重置，去除超链接下划线 */
+#linkContentDisplay > a {
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    transition: all 0.3s ease;
+}
+
+/* 类型 1：基础文字 */
+.demo-link-text {
+    font-size: 18px;
+    color: var(--accent-cyan) !important;
+    text-decoration: underline !important;
+    text-align: center;
+}
+.demo-link-text:hover { color: var(--accent-blue) !important; }
+
+/* 类型 2：包裹图片 */
+.demo-link-image {
+    display: flex;
+    justify-content: center;
+}
+.demo-link-image img {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.demo-link-image:hover img {
+    border-color: var(--accent-cyan);
+    transform: scale(1.02);
+}
+
+/* 类型 3：包裹整个卡片 */
+.demo-link-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.demo-link-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+.demo-link-card:hover {
+    border-color: var(--accent-pink);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(236, 72, 153, 0.15);
+}
+
+.demo-link-card .card-info h4 {
+    color: var(--text-primary);
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+.demo-link-card .card-info p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 0;
+}
+.demo-link-card:hover .card-info h4 {
+    color: var(--accent-pink);
+}
+
+/* 类型 4：伪装成按钮 */
+.demo-link-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white !important;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+.demo-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+.demo-link-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.4);
+}

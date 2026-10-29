@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格 Table · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/table.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span> CSS 原理工坊 <span class="logo-sub">表格 Table</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <aside class="sidebar">
+        <div class="sidebar-section-title">表格 Table</div>
+        <button class="sidebar-nav-item active" data-section="table-basic">
+            <span class="nav-icon">📊</span><span class="nav-label">1. 基础标签与特性</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="table-style">
+            <span class="nav-icon">🎨</span><span class="nav-label">2. CSS 表格美化</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="table-layout-case">
+            <span class="nav-icon">🗂️</span><span class="nav-label">3. 经典场景：Table 布局</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="table-data-case">
+            <span class="nav-icon">📈</span><span class="nav-label">4. 现代场景：数据表格</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item"><span class="nav-icon">📦</span><span class="nav-label">盒子模型</span></a>
+        <a href="css3.html" class="sidebar-nav-item"><span class="nav-icon">✨</span><span class="nav-label">CSS3 扩展</span></a>
+        <a href="display.html" class="sidebar-nav-item"><span class="nav-icon">🔀</span><span class="nav-label">Display 类型</span></a>
+        <a href="flexbox.html" class="sidebar-nav-item"><span class="nav-icon">📐</span><span class="nav-label">Flexbox</span></a>
+        <a href="float.html" class="sidebar-nav-item"><span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span></a>
+        <a href="list.html" class="sidebar-nav-item"><span class="nav-icon">📋</span><span class="nav-label">列表标签</span></a>
+    </aside>
+
+    <main class="main-content">
+        <section class="section-panel active" id="section-table-basic">
+            <div class="concept-card" style="margin-bottom: 20px;">
+                <h2>1. 表格基础与标签特性</h2>
+                <p>初始状态是一个没有任何属性的原生表格。你可以通过点击单元格或右侧面板来添加属性。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">原生表格渲染区</div>
+                    
+                    <div class="stage stage-unified" style="flex-direction: column; gap: 20px;">
+                        <div class="table-merge-wrapper" id="tableWrapper" style="width: 100%; display: flex; justify-content: center; align-items: flex-start; overflow-x: auto; min-height: 250px; position: relative;"></div>
+                    </div>
+
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="tableHtmlCode" style="max-height: 450px;"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide" style="max-height: 85vh; overflow-y: auto;">
+                    <div class="preset-btns preset-btns-wrap" style="margin-bottom: 16px;">
+                        <button class="preset-btn active" data-tab="tbl">table 属性</button>
+                        <button class="preset-btn" data-tab="tr">tr 属性</button>
+                        <button class="preset-btn" data-tab="td">td / th 属性</button>
+                    </div>
+
+                    <!-- 面板 A：table (全部归零) -->
+                    <div class="table-tab-panel active" id="tab-panel-tbl">
+                        <div class="control-group">
+                            <label><span>border</span><span class="value-display" id="valTblBorder">0px</span></label>
+                            <input type="range" id="sliderTblBorder" min="0" max="10" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label><span>cellspacing</span><span class="value-display" id="valTblCellSpacing">2px</span></label>
+                            <input type="range" id="sliderTblCellSpacing" min="0" max="30" value="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>cellpadding</span><span class="value-display" id="valTblCellPadding">1px</span></label>
+                            <input type="range" id="sliderTblCellPadding" min="0" max="100" value="1">
+                        </div>
+                        <div class="control-group">
+                            <label style="margin-bottom: 8px;"><span>width</span><span class="value-display" id="valTblWidth">auto</span></label>
+                            <input type="range" id="sliderTblWidth" min="0" max="800" value="0">
+                            <label style="margin-top: 12px; margin-bottom: 8px;"><span>height</span><span class="value-display" id="valTblHeight">auto</span></label>
+                            <input type="range" id="sliderTblHeight" min="0" max="400" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label><span>align</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-tbl-align="left">left</button>
+                                <button class="preset-btn" data-tbl-align="center">center</button>
+                                <button class="preset-btn" data-tbl-align="right">right</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>bgcolor</span></label>
+                            <input type="color" id="inputTblBgcolor" value="#1e293b" style="width: 100%; height: 30px;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>background</span></label>
+                            <input type="text" id="inputTblBgImage" class="text-input" placeholder="输入图片 URL">
+                        </div>
+                    </div>
+
+                    <!-- 面板 B：tr (全部归零) -->
+                    <div class="table-tab-panel" id="tab-panel-tr" style="display: none;">
+                        <div class="control-group">
+                            <label><span>选择行</span></label>
+                            <select id="selectTrTarget" class="mini-select" style="width: 100%;">
+                                <option value="all">所有行 (All)</option>
+                                <option value="0">第 1 行</option>
+                                <option value="1">第 2 行</option>
+                                <option value="2">第 3 行</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label><span>height</span><span class="value-display" id="valTrHeight">auto</span></label>
+                            <input type="range" id="sliderTrHeight" min="0" max="100" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label><span>align / valign</span></label>
+                            <div style="display: flex; gap: 8px;">
+                                <select id="selectTrAlign" class="mini-select" style="flex: 1;">
+                                    <option value="left">left</option>
+                                    <option value="center">center</option>
+                                    <option value="right">right</option>
+                                </select>
+                                <select id="selectTrValign" class="mini-select" style="flex: 1;">
+                                    <option value="top">top</option>
+                                    <option value="middle">middle</option>
+                                    <option value="bottom">bottom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>bgcolor</span></label>
+                            <input type="color" id="inputTrBgcolor" value="#1e293b" style="width: 100%; height: 30px;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>background</span></label>
+                            <input type="text" id="inputTrBgImage" class="text-input" placeholder="输入图片 URL">
+                        </div>
+                    </div>
+
+                    <!-- 面板 C：td / th (全部归零) -->
+                    <div class="table-tab-panel" id="tab-panel-td" style="display: none;">
+                        
+                        <div class="hint-box" id="selectionInfo" style="background: rgba(6, 182, 212, 0.1); border-color: var(--accent-cyan); font-weight: bold; margin-bottom: 16px;">
+                            💡 请在左侧大屏点击你要操作的单元格
+                        </div>
+
+                        <div class="toggle-row" style="border-top: none; padding-top: 0; margin-bottom: 12px;">
+                            <span>首行使用 &lt;th&gt; 标签</span>
+                            <button class="toggle-switch" id="toggleUseTh"></button>
+                        </div>
+
+                        <div class="control-group" id="mergeControlBox" style="background: rgba(236, 72, 153, 0.1); padding: 12px; border-radius: 6px; border: 1px solid rgba(236, 72, 153, 0.3); display: none;">
+                            <label><span style="color: var(--accent-pink); font-weight: 700;">单元格合并</span></label>
+                            <div class="toggle-row" style="padding: 6px 0;">
+                                <span>跨行合并 (rowspan)</span>
+                                <button class="toggle-switch" id="toggleRowspan"></button>
+                            </div>
+                            <div id="rowspanControls" style="display: none; margin-bottom: 12px;">
+                                <input type="number" id="inputRowspanCount" class="text-input" value="2" min="2" max="3" style="width: 60px;">
+                            </div>
+                            <div class="toggle-row" style="padding: 6px 0;">
+                                <span>跨列合并 (colspan)</span>
+                                <button class="toggle-switch" id="toggleColspan"></button>
+                            </div>
+                            <div id="colspanControls" style="display: none;">
+                                <input type="number" id="inputColspanCount" class="text-input" value="2" min="2" max="3" style="width: 60px;">
+                            </div>
+                        </div>
+
+                        <div class="control-group" style="margin-top: 16px;">
+                            <label style="margin-bottom: 8px;"><span>选中的 width</span><span class="value-display" id="valTdWidth">auto</span></label>
+                            <input type="range" id="sliderTdWidth" min="0" max="300" value="0">
+                            <label style="margin-top: 12px; margin-bottom: 8px;"><span>选中的 height</span><span class="value-display" id="valTdHeight">auto</span></label>
+                            <input type="range" id="sliderTdHeight" min="0" max="200" value="0">
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>align / valign</span></label>
+                            <div style="display: flex; gap: 8px;">
+                                <select id="selectTdAlign" class="mini-select" style="flex: 1;">
+                                    <option value="left">left</option>
+                                    <option value="center">center</option>
+                                    <option value="right">right</option>
+                                </select>
+                                <select id="selectTdValign" class="mini-select" style="flex: 1;">
+                                    <option value="top">top</option>
+                                    <option value="middle">middle</option>
+                                    <option value="bottom">bottom</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>bgcolor</span></label>
+                            <input type="color" id="inputTdBgcolor" value="#1e293b" style="width: 100%; height: 30px;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>background</span></label>
+                            <input type="text" id="inputTdBgImage" class="text-input" placeholder="输入图片 URL">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 2：CSS 表格美化
+             ============================================================ -->
+        <section class="section-panel" id="section-table-style">
+            <div class="concept-card">
+                <h2>2. CSS 表格美化</h2>
+                <p>用 CSS 替代过时的 HTML 属性：<code>border</code> 控制边框样式、<code>border-collapse</code> 合并边框，<code>padding</code> 设置内容距离。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">现代 CSS 表格</div>
+                    <div class="stage stage-unified" style="flex-direction: column; padding: 20px;">
+                        <table class="modern-table" id="modernTable">
+                            <thead>
+                                <tr>
+                                    <th>员工姓名</th>
+                                    <th>部门</th>
+                                    <th>薪资</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>张三</td><td>研发部</td><td>￥28,000</td></tr>
+                                <tr><td>李四</td><td>市场部</td><td>￥18,500</td></tr>
+                                <tr><td>王五</td><td>设计部</td><td>￥22,000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 CSS 代码</div>
+                        <div class="code-output" id="tableCssCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide" style="max-height: 85vh; overflow-y: auto;">
+                    
+                    <!-- 切换标签 -->
+                    <div class="preset-btns preset-btns-wrap" style="margin-bottom: 20px;">
+                        <button class="preset-btn active" data-css-tab="tbl">border(Table)</button>
+                        <button class="preset-btn" data-css-tab="td">border(td/th)</button>
+                        <button class="preset-btn" data-css-tab="bg">背景与内边距</button>
+                    </div>
+
+                    <!-- ================= 1. Table 外边框 & 圆角 ================= -->
+                    <div class="css-tab-panel active" id="css-panel-tbl">
+                        <div class="control-group">
+                            <label><span>border-collapse</span><span class="value-display" id="valBorderCollapse">collapse</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-collapse="collapse">collapse (合并)</button>
+                                <button class="preset-btn" data-collapse="separate">separate (分离)</button>
+                            </div>
+                        </div>
+                        <div class="control-group" id="spacingGroup" style="display: none;">
+                            <label><span>border-spacing</span><span class="value-display" id="valBorderSpacing">4px</span></label>
+                            <input type="range" id="sliderBorderSpacing" min="0" max="30" value="4">
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>border-style</span><span class="value-display" id="valTblBorderStyle">solid</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-tbl-b-style="solid">solid</button>
+                                <button class="preset-btn" data-tbl-b-style="dashed">dashed</button>
+                                <button class="preset-btn" data-tbl-b-style="dotted">dotted</button>
+                                <button class="preset-btn" data-tbl-b-style="none">none</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-width</span><span class="value-display" id="valTblBorderWidth">2px</span></label>
+                            <input type="range" id="sliderTblBorderWidth" min="0" max="20" value="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-color</span><span class="value-display" id="valTblBorderColor">#3b82f6</span></label>
+                            <input type="color" id="inputTblBorderColor" value="#3b82f6" style="width: 100%; height: 36px; padding: 2px; border: 1px solid var(--bg-tertiary); border-radius: var(--radius-sm); background: var(--bg-primary); cursor: pointer;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-radius (表格圆角)</span><span class="value-display" id="valTblBorderRadius">0px</span></label>
+                            <input type="range" id="sliderTblBorderRadius" min="0" max="50" value="0">
+                        </div>
+                    </div>
+
+                    <!-- ================= 2. td / th 单元格 ================= -->
+                    <div class="css-tab-panel" id="css-panel-td" style="display: none;">
+                        <div class="control-group">
+                            <label><span>border-style</span><span class="value-display" id="valTdBorderStyle">solid</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-td-b-style="solid">solid</button>
+                                <button class="preset-btn" data-td-b-style="dashed">dashed</button>
+                                <button class="preset-btn" data-td-b-style="dotted">dotted</button>
+                                <button class="preset-btn" data-td-b-style="none">none</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-width</span><span class="value-display" id="valTdBorderWidth">1px</span></label>
+                            <input type="range" id="sliderTdBorderWidth" min="0" max="20" value="1">
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-color</span><span class="value-display" id="valTdBorderColor">#475569</span></label>
+                            <input type="color" id="inputTdBorderColor" value="#475569" style="width: 100%; height: 36px; padding: 2px; border: 1px solid var(--bg-tertiary); border-radius: var(--radius-sm); background: var(--bg-primary); cursor: pointer;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>border-radius (单元格圆角)</span><span class="value-display" id="valTdBorderRadius">0px</span></label>
+                            <input type="range" id="sliderTdBorderRadius" min="0" max="50" value="0">
+                        </div>
+                    </div>
+
+                    <!-- ================= 3. 背景与内边距 ================= -->
+                    <div class="css-tab-panel" id="css-panel-bg" style="display: none;">
+                        <h3>Table 背景 (作用于表格)</h3>
+                        <div class="control-group">
+                            <label><span>背景颜色</span></label>
+                            <input type="color" id="cssInputTblBgColor" value="#0f172a" style="width: 100%; height: 36px;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>背景图片 URL</span></label>
+                            <input type="text" id="cssInputTblBgImage" class="text-input" placeholder="例如: ../img/bg.png">
+                        </div>
+
+                        <h3 style="margin-top: 24px;">td / th 背景 (作用于单元格)</h3>
+                        <div class="control-group">
+                            <label><span>背景颜色</span></label>
+                            <input type="color" id="cssInputTdBgColor" value="#1e293b" style="width: 100%; height: 36px;">
+                        </div>
+                        <div class="control-group">
+                            <label><span>背景图片 URL</span></label>
+                            <input type="text" id="cssInputTdBgImage" class="text-input" placeholder="例如: ../img/bg.png">
+                        </div>
+                        <div class="control-group">
+                            <label><span>background-size</span></label>
+                            <select id="cssSelectBgSize" class="mini-select" style="width: 100%; padding: 6px 10px;">
+                                <option value="auto">auto</option>
+                                <option value="cover">cover</option>
+                                <option value="contain">contain</option>
+                                <option value="100% 100%">100% 100%</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label><span>background-repeat</span></label>
+                            <select id="cssSelectBgRepeat" class="mini-select" style="width: 100%; padding: 6px 10px;">
+                                <option value="no-repeat">no-repeat</option>
+                                <option value="repeat">repeat</option>
+                                <option value="repeat-x">repeat-x</option>
+                                <option value="repeat-y">repeat-y</option>
+                            </select>
+                        </div>
+
+                        <h3 style="margin-top: 24px;">Padding 内边距</h3>
+                        <div class="control-group">
+                            <label><span>Table padding (外)</span><span class="value-display" id="valTblPadding">0px</span></label>
+                            <input type="range" id="sliderTblPadding" min="0" max="80" value="0" step="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>td/th padding (内)</span><span class="value-display" id="valTdPadding">14px</span></label>
+                            <input type="range" id="sliderTdPadding" min="0" max="80" value="14" step="2">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 3：经典场景 - Table 布局 (thead / tbody / tfoot)
+             ============================================================ -->
+        <section class="section-panel" id="section-table-layout-case">
+            <div class="concept-card">
+                <h2>3. 经典场景：使用 Table 语义标签进行网页布局</h2>
+                <p>在 CSS Flexbox 普及之前，开发者常利用 <code>&lt;thead&gt;</code>（头部）、<code>&lt;tbody&gt;</code>（主体内容）、<code>&lt;tfoot&gt;</code>（底部）来划分网页的区域。为了让两侧的导航和内容并排，他们还会在 <code>&lt;tbody&gt;</code> 里嵌套左右两个 <code>&lt;td&gt;</code>。</p>
+            </div>
+
+            <div class="demo-layout">
+                <!-- 左侧大屏 -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">早期语义化 Table 布局模拟器</div>
+                    <div class="stage stage-unified" style="display: flex; align-items: flex-start; justify-content: center; padding: 30px; background: #0f172a; overflow-x: auto;">
+                        
+                        <!-- 渲染容器 -->
+                        <div id="layoutTableWrapper" style="width: 100%; max-width: 600px;"></div>
+
+                    </div>
+
+                    <!-- 实时代码 -->
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="layoutTableCode" style="max-height: 400px;"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧控制面板 -->
+                <div class="control-panel control-panel-wide" style="max-height: 85vh; overflow-y: auto;">
+                    <h3>全局表格属性</h3>
+                    
+                    <div class="control-group">
+                        <label><span>border (边框粗细)</span><span class="value-display" id="valLayoutBorder">1px</span></label>
+                        <input type="range" id="sliderLayoutBorder" min="0" max="10" value="1">
+                    </div>
+                    <div class="control-group">
+                        <label><span>cellspacing</span><span class="value-display" id="valLayoutCellSpacing">2px</span></label>
+                        <input type="range" id="sliderLayoutCellSpacing" min="0" max="20" value="2">
+                    </div>
+                    <div class="control-group">
+                        <label><span>cellpadding</span><span class="value-display" id="valLayoutCellPadding">10px</span></label>
+                        <input type="range" id="sliderLayoutCellPadding" min="0" max="40" value="10">
+                    </div>
+
+                    <h3 style="margin-top: 24px;">语义标签区块高度</h3>
+                    
+                    <div class="control-group">
+                        <label><span>Header (thead) 高度</span><span class="value-display" id="valLayoutHeaderH">80px</span></label>
+                        <input type="range" id="sliderLayoutHeaderH" min="40" max="150" value="80">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label><span>内容区 (tbody) 最小高度</span><span class="value-display" id="valLayoutBodyH">250px</span></label>
+                        <input type="range" id="sliderLayoutBodyH" min="150" max="400" value="250">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>Footer (tfoot) 高度</span><span class="value-display" id="valLayoutFooterH">50px</span></label>
+                        <input type="range" id="sliderLayoutFooterH" min="30" max="100" value="50">
+                    </div>
+
+                    <h3 style="margin-top: 24px;">布局行为</h3>
+                    <div class="toggle-row" style="border-top: none;">
+                        <span>Sidebar 与 Content 并排 (左右分栏)</span>
+                        <button class="toggle-switch active" id="toggleLayoutSidebar"></button>
+                    </div>
+
+                    <div class="hint-box" style="margin-top: 16px;">
+                        <strong>💡 历史原理：</strong><br>
+                        早期网页会写 <code>&lt;thead&gt;&lt;tr&gt;&lt;td colspan="2"&gt;头部&lt;/td&gt;&lt;/tr&gt;&lt;/thead&gt;</code> 来实现全宽头部。然后通过关闭右侧分栏开关，可以看清它是如何靠 <code>&lt;td&gt;</code> 的左右排列来实现两栏布局的。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 4：现代场景 - 数据表格高级案例
+             ============================================================ -->
+        <section class="section-panel" id="section-table-data-case">
+            <div class="concept-card">
+                <h2>4. 现代场景：数据表格高级案例</h2>
+                <p>现代网页中，表格不再用于排版，而是专门用于<strong>展示结构化数据</strong>。点击右侧按钮，查看知名组件库（如 Ant Design、Tailwind UI）中高级表格的经典设计。</p>
+            </div>
+
+            <div class="demo-layout">
+                <!-- 左侧大屏 -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">大厂级后台数据表格预览</div>
+                    <div class="stage stage-unified" style="display: flex; align-items: flex-start; justify-content: center; padding: 40px 20px; background: #0f172a; overflow-x: auto;">
+                        
+                        <!-- 我们通过控制包裹层的类名，来切换整体风格 -->
+                        <div class="case-table-wrapper" id="caseTableWrapper" style="width: 100%; max-width: 800px; transition: all 0.3s ease;">
+                            <table class="case-table" id="caseTable">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>角色</th>
+                                        <th>状态</th>
+                                        <th>最近登录</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>张三</strong></td>
+                                        <td>前端开发</td>
+                                        <td><span class="status-tag success">活跃</span></td>
+                                        <td>2 分钟前</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>李四</strong></td>
+                                        <td>产品经理</td>
+                                        <td><span class="status-tag warning">请假</span></td>
+                                        <td>3 小时前</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>王五</strong></td>
+                                        <td>UI 设计</td>
+                                        <td><span class="status-tag success">活跃</span></td>
+                                        <td>昨天 14:30</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>赵六</strong></td>
+                                        <td>后端开发</td>
+                                        <td><span class="status-tag danger">离线</span></td>
+                                        <td>3 天前</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 CSS 代码</div>
+                        <div class="code-output" id="caseTableCode" style="max-height: 450px;"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧控制面板 -->
+                <div class="control-panel control-panel-wide">
+                    <h3>选择表格风格</h3>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">每个按钮代表一种真实的现代 UI 设计规范。</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-secondary active case-style-btn" data-case-style="antd" style="justify-content: flex-start; text-align: left; padding: 16px;">
+                            <div>
+                                <strong style="font-size: 14px; display: block; color: var(--text-primary); margin-bottom: 4px;">Ant Design 风格</strong>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">极简表头，浅色斑马线，注重数据可读性。</span>
+                            </div>
+                        </button>
+                        
+                        <button class="btn btn-secondary case-style-btn" data-case-style="tailwind" style="justify-content: flex-start; text-align: left; padding: 16px;">
+                            <div>
+                                <strong style="font-size: 14px; display: block; color: var(--text-primary); margin-bottom: 4px;">Tailwind UI 风格</strong>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">卡片式圆角，底部分割线，清爽干净。</span>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-secondary case-style-btn" data-case-style="github" style="justify-content: flex-start; text-align: left; padding: 16px;">
+                            <div>
+                                <strong style="font-size: 14px; display: block; color: var(--text-primary); margin-bottom: 4px;">GitHub 风格</strong>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">浅灰色表头，深色边框，经典的代码仓库列表。</span>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-secondary case-style-btn" data-case-style="stripe" style="justify-content: flex-start; text-align: left; padding: 16px;">
+                            <div>
+                                <strong style="font-size: 14px; display: block; color: var(--text-primary); margin-bottom: 4px;">Stripe 仪表盘风格</strong>
+                                <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">无边框悬浮卡片，明显的行悬停变色，极具现代感。</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+		
+	</main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initTableModule } from '../js/modules/table.js';
+    initTableModule();
+</script>
+</body>
+</html>

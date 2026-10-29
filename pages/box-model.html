@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盒子模型 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/box-model.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span>
+        CSS 原理工坊
+        <span class="logo-sub">盒子模型</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-section-title">盒子模型</div>
+        <button class="sidebar-nav-item active" data-section="intro">
+            <span class="nav-icon">📦</span><span class="nav-label">1. 认识盒子模型</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="div">
+            <span class="nav-icon">🏷️</span><span class="nav-label">2. div 标签</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="border">
+            <span class="nav-icon">🖼️</span><span class="nav-label">3. 边框 border</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="padding">
+            <span class="nav-icon">↔️</span><span class="nav-label">4. 内边距 padding</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="margin">
+            <span class="nav-icon">↕️</span><span class="nav-label">5. 外边距 margin</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="size">
+            <span class="nav-icon">📏</span><span class="nav-label">6. 盒子的宽与高</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="background">
+            <span class="nav-icon">🎨</span><span class="nav-label">7. 背景属性</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="float.html" class="sidebar-nav-item">
+            <span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span>
+        </a>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+
+        <!-- ============================================================
+             板块 1：认识盒子模型
+             ============================================================ -->
+        <section class="section-panel active" id="section-intro">
+        
+            <div class="concept-card">
+                <h2>1. 认识盒子模型</h2>
+                <p>每个 HTML 元素都被看作一个矩形盒子。盒子模型由 <strong>内容（content）</strong>、
+                   <strong>内边距（padding）</strong>、<strong>边框（border）</strong>、
+                   <strong>外边距（margin）</strong> 组成。理解这四层结构是掌握 CSS 布局的基础。</p>
+                <div class="analogy">💡 类比：手机盒子 —— 手机是内容，内衬是内边距，纸盒是边框，盒子之间的间距是外边距</div>
+            </div>
+                    
+            <div class="stage-wrapper">
+                <div class="stage-label">统一的演示场景（浏览器 / 盒子 / 内容）</div>
+                <div class="stage stage-unified">
+                    <div class="browser-frame">
+                        <div class="browser-bar">
+                            <span class="browser-dot red"></span>
+                            <span class="browser-dot yellow"></span>
+                            <span class="browser-dot green"></span>
+                            <span class="browser-url">http://localhost:8000</span>
+                        </div>
+                        <div class="browser-viewport">
+                            <div class="demo-box">
+                                <div class="demo-box-margin-label">margin</div>
+                                <div class="demo-box-border">
+                                    <div class="demo-box-border-label">border</div>
+                                    <div class="demo-box-padding">
+                                        <div class="demo-box-padding-label">padding</div>
+                                        <div class="demo-box-content">内容 content</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+                <div class="hint-box">
+                    <strong>💡 三层结构：</strong>最外层是浏览器视口，中间是演示盒子（包含 margin/border/padding 三层嵌套），最内层是内容区。
+                </div>
+            </div>
+    
+        </section>
+
+        <!-- ============================================================
+             板块 2：div 标签
+             ============================================================ -->
+        <section class="section-panel" id="section-div">
+            <div class="concept-card">
+                <h2>2. &lt;div&gt; 标签</h2>
+                <p><code>&lt;div&gt;</code> 是 HTML 提供的块容器标签，用于划分网页模块。
+                   HTML5 新增了语义化标签 <code>&lt;header&gt; &lt;nav&gt; &lt;section&gt; &lt;article&gt; &lt;aside&gt; &lt;footer&gt;</code>。</p>
+            </div>
+
+            <div class="stage-wrapper">
+                <div class="stage-label">div 布局 vs HTML5 语义标签</div>
+                <div class="stage stage-compare">
+                    <div class="compare-col">
+                        <h4>HTML（div 实现）</h4>
+                        <div class="layout-mock">
+                            <div class="mock-block mock-header">&lt;div id="header"&gt;</div>
+                            <div class="mock-block mock-nav">&lt;div id="nav"&gt;</div>
+                            <div class="mock-row">
+                                <div class="mock-block mock-article">&lt;div class="article"&gt;<br><span class="mock-inner">&lt;div class="section"&gt;</span></div>
+                                <div class="mock-block mock-sidebar">&lt;div id="sidebar"&gt;</div>
+                            </div>
+                            <div class="mock-block mock-footer">&lt;div id="footer"&gt;</div>
+                        </div>
+                    </div>
+                    <div class="compare-col">
+                        <h4>HTML5（语义标签）</h4>
+                        <div class="layout-mock">
+                            <div class="mock-block mock-header">&lt;header&gt;</div>
+                            <div class="mock-block mock-nav">&lt;nav&gt;</div>
+                            <div class="mock-row">
+                                <div class="mock-block mock-article">&lt;article&gt;<br><span class="mock-inner">&lt;section&gt;</span></div>
+                                <div class="mock-block mock-sidebar">&lt;aside&gt;</div>
+                            </div>
+                            <div class="mock-block mock-footer">&lt;footer&gt;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 3：边框 border
+             ============================================================ -->
+        <section class="section-panel" id="section-border">
+            <div class="concept-card">
+                <h2>3. 边框属性 border</h2>
+                <p>边框由 <strong>样式</strong>、<strong>宽度</strong>、<strong>颜色</strong> 三要素组成。可以统一设置，也可以按四边分别设置。
+                   <strong>宽度必须在设置样式之后才生效。</strong></p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">边框演示（统一场景）</div>
+                    <div class="stage stage-unified">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport">
+                                <div class="demo-box">
+                                    <div class="demo-box-margin-label">margin</div>
+                                    <div class="demo-box-border" id="borderDemoBorder">
+                                        <div class="demo-box-border-label">border</div>
+                                        <div class="demo-box-padding">
+                                            <div class="demo-box-padding-label">padding</div>
+                                            <div class="demo-box-content">内容 content</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="play-controls">
+                        <button class="btn btn-primary" id="borderTransparentAnimBtn">▶ 演示 transparent vs 无边框</button>
+                    </div>
+
+                    <div class="hint-box" id="borderAnimHint">
+                        <strong>💡 演示重点：</strong>点击上方按钮，对比 <code>border-style: none</code> 和 <code>border-color: transparent</code> 的区别。
+                    </div>
+
+                    <div class="code-output" style="margin-top: 16px;">
+                        <span class="code-line"><span class="sel">.box</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">border</span>: <span class="val" id="codeBorderFull">4px solid #3b82f6</span>;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide">
+                    <h3>边框设置</h3>
+
+                    <div class="control-group">
+                        <label><span>设置模式</span><span class="value-display" id="valBorderMode">统一设置</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-border-mode="uniform">统一</button>
+                            <button class="preset-btn" data-border-mode="1">1 值</button>
+                            <button class="preset-btn" data-border-mode="2">2 值</button>
+                            <button class="preset-btn" data-border-mode="3">3 值</button>
+                            <button class="preset-btn" data-border-mode="4">4 值</button>
+                            <button class="preset-btn" data-border-mode="per-side">分边</button>
+                        </div>
+                    </div>
+
+                    <div class="toggle-row" style="border-top: none; margin-bottom: 12px;">
+                        <span style="font-weight: 600;">border-style: none（无边框）</span>
+                        <button class="toggle-switch" id="toggleBorderNone"></button>
+                    </div>
+                    <div class="hint-box" id="borderNoneHint" style="display: none; margin-bottom: 12px; font-size: 11px;">
+                        ⚠️ 当前 <code>border-style: none</code>，边框宽度变为 0，下方的宽度 / 颜色 / 分边设置都不会生效，直到把样式改回非 none。
+                    </div>
+
+                    <div id="borderSettingArea">
+                        <div id="borderUniformPanel" class="border-sub-panel active">
+                            <div class="control-group">
+                                <label><span>border-style</span><span class="value-display" id="valBorderStyle">solid</span></label>
+                                <div class="preset-btns preset-btns-wrap">
+                                    <button class="preset-btn active" data-border-style="solid">solid</button>
+                                    <button class="preset-btn" data-border-style="dashed">dashed</button>
+                                    <button class="preset-btn" data-border-style="dotted">dotted</button>
+                                    <button class="preset-btn" data-border-style="double">double</button>
+                                    <button class="preset-btn" data-border-style="none">none</button>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label><span>border-width</span><span class="value-display" id="valBorderWidth">4px</span></label>
+                                <input type="range" id="sliderBorderWidth" min="0" max="20" value="4" step="1">
+                            </div>
+
+                            <div class="control-group">
+                                <label><span>border-color</span><span class="value-display" id="valBorderColor">#3b82f6</span></label>
+                                <div class="color-swatches">
+                                    <button class="color-swatch active" data-border-color="#3b82f6" style="background:#3b82f6"></button>
+                                    <button class="color-swatch" data-border-color="#10b981" style="background:#10b981"></button>
+                                    <button class="color-swatch" data-border-color="#f59e0b" style="background:#f59e0b"></button>
+                                    <button class="color-swatch" data-border-color="#ec4899" style="background:#ec4899"></button>
+                                    <button class="color-swatch" data-border-color="transparent" style="background: repeating-conic-gradient(#666 0% 25%, #333 0% 50%) 50% / 12px 12px;" title="transparent"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="borderMultiPanel" class="border-sub-panel">
+                            <div class="border-multi-slots" id="borderMultiSlots"></div>
+                        </div>
+
+                        <div id="borderPerSidePanel" class="border-sub-panel">
+                            <div class="per-side-grid">
+                                <div class="per-side-item">
+                                    <div class="per-side-title">上边框 border-top</div>
+                                    <select class="mini-select" data-side-style="top">
+                                        <option value="solid">solid</option>
+                                        <option value="dashed">dashed</option>
+                                        <option value="dotted">dotted</option>
+                                        <option value="double">double</option>
+                                        <option value="none">none</option>
+                                    </select>
+                                    <input type="range" class="mini-range" data-side-width="top" min="0" max="20" value="4">
+                                    <input type="color" class="mini-color" data-side-color="top" value="#3b82f6">
+                                </div>
+                                <div class="per-side-item">
+                                    <div class="per-side-title">右边框 border-right</div>
+                                    <select class="mini-select" data-side-style="right">
+                                        <option value="solid">solid</option>
+                                        <option value="dashed">dashed</option>
+                                        <option value="dotted">dotted</option>
+                                        <option value="double">double</option>
+                                        <option value="none">none</option>
+                                    </select>
+                                    <input type="range" class="mini-range" data-side-width="right" min="0" max="20" value="4">
+                                    <input type="color" class="mini-color" data-side-color="right" value="#10b981">
+                                </div>
+                                <div class="per-side-item">
+                                    <div class="per-side-title">下边框 border-bottom</div>
+                                    <select class="mini-select" data-side-style="bottom">
+                                        <option value="solid">solid</option>
+                                        <option value="dashed">dashed</option>
+                                        <option value="dotted">dotted</option>
+                                        <option value="double">double</option>
+                                        <option value="none">none</option>
+                                    </select>
+                                    <input type="range" class="mini-range" data-side-width="bottom" min="0" max="20" value="4">
+                                    <input type="color" class="mini-color" data-side-color="bottom" value="#f59e0b">
+                                </div>
+                                <div class="per-side-item">
+                                    <div class="per-side-title">左边框 border-left</div>
+                                    <select class="mini-select" data-side-style="left">
+                                        <option value="solid">solid</option>
+                                        <option value="dashed">dashed</option>
+                                        <option value="dotted">dotted</option>
+                                        <option value="double">double</option>
+                                        <option value="none">none</option>
+                                    </select>
+                                    <input type="range" class="mini-range" data-side-width="left" min="0" max="20" value="4">
+                                    <input type="color" class="mini-color" data-side-color="left" value="#ec4899">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 4：内边距 padding
+             ============================================================ -->
+        <section class="section-panel" id="section-padding">
+            <div class="concept-card">
+                <h2>4. 内边距 padding</h2>
+                <p>内边距是<strong>内容与边框之间的距离</strong>。可以四边统一设置，也可以用简写分别设置上下左右。
+                   <strong>padding 不允许使用负值。</strong></p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">内边距演示（大盒子套小盒子）</div>
+                    <div class="stage stage-unified">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport">
+                                <div class="demo-box">
+                                    <div class="demo-box-margin-label">margin</div>
+                                    <div class="demo-box-border">
+                                        <div class="demo-box-border-label">border</div>
+                                        <div class="demo-box-padding" id="paddingDemoLayer">
+                                            <div class="demo-box-padding-label">padding</div>
+                                            <div class="demo-box-content">内容区域</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-output" style="margin-top: 16px;">
+                        <span class="code-line"><span class="sel">.box</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">padding</span>: <span class="val" id="codePadding">20px</span>;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                        <span class="code-line"><span class="comment">/* 1值=四边 / 2值=上下 左右 / 3值=上 左右 下 / 4值=上 右 下 左 */</span></span>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide">
+                    <h3>padding 设置</h3>
+
+                    <div class="control-group">
+                        <label><span>简写值数量</span><span class="value-display" id="valPaddingMode">1 值</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-padding-mode="1">1 值</button>
+                            <button class="preset-btn" data-padding-mode="2">2 值</button>
+                            <button class="preset-btn" data-padding-mode="3">3 值</button>
+                            <button class="preset-btn" data-padding-mode="4">4 值</button>
+                        </div>
+                    </div>
+
+                    <div id="paddingSliders" class="padding-sliders"></div>
+
+                    <div class="control-group">
+                        <label><span>单位</span><span class="value-display" id="valPaddingUnit">px</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-padding-unit="px">px</button>
+                            <button class="preset-btn" data-padding-unit="%">%（相对父元素宽度）</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 5：外边距 margin（重构 · 单大屏切换）
+             ============================================================ -->
+        <section class="section-panel" id="section-margin">
+            <div class="concept-card">
+                <h2>5. 外边距 margin</h2>
+                <p>外边距是<strong>元素边框与相邻元素之间的距离</strong>。与 padding 不同，<strong>margin 允许负值</strong>。
+                   常用 <code>margin: 0 auto</code> 实现块级元素水平居中。
+                   <strong>重点：当两个相邻元素都设置了 margin 时，它们之间的距离取较大值，而不是相加。</strong></p>
+            </div>
+
+            <div class="demo-layout">
+                <!-- 左侧：单一可视化大屏，根据开关切换两种模式 -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">外边距演示</div>
+
+                    <!-- 模式切换按钮 -->
+                    <div class="preset-btns preset-btns-wrap" style="margin-bottom: 16px;">
+                        <button class="preset-btn active" data-margin-scene="surround">盒子四周有元素</button>
+                        <button class="preset-btn" data-margin-scene="align">盒子四周无元素</button>
+                    </div>
+
+                    <!-- 场景 A：四周有元素 -->
+                    <div class="stage stage-unified stage-margin-demo" id="marginSceneSurround">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport margin-surround-viewport">
+                                <div class="margin-surround" id="marginSurround">
+                                    <!-- 上邻居 -->
+                                    <div class="surround-neighbor surround-top" id="surroundTop">上方元素</div>
+
+                                    <!-- 中间行：左邻居 + 盒子 + 右邻居 -->
+                                    <div class="surround-middle">
+                                        <div class="surround-neighbor surround-left" id="surroundLeft">左</div>
+
+                                        <div class="margin-demo-box-outer" id="marginDemoOuter">
+                                            <!-- 粉色 margin 层，padding 即视觉上的外边距 -->
+                                            <div class="margin-demo-box-margin" id="marginLayerBox">
+                                                <span class="margin-layer-label">margin</span>
+                                                <div class="demo-box-border" id="marginDemoBorder">
+                                                    <div class="demo-box-padding" id="marginDemoPadding">
+                                                        <div class="demo-box-content">内容</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="surround-neighbor surround-right" id="surroundRight">右</div>
+                                    </div>
+
+                                    <!-- 下邻居 -->
+                                    <div class="surround-neighbor surround-bottom" id="surroundBottom">下方元素</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 场景 B：四周无元素 · 对齐方式 -->
+                    <div class="stage stage-unified" id="marginSceneAlign" style="display: none; padding: 24px;">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport align-viewport" id="alignViewport">
+                                <div class="align-box" id="alignBox">
+                                    <div class="align-box-content">盒 子</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hint-box" id="marginSceneHint">
+                        <strong>💡 当前：</strong>盒子四周有元素。粉色虚线框代表盒子的 margin，四周元素紧贴着粉色框，说明盒子与邻居之间的距离就是 margin 值。
+                    </div>
+
+                    <div class="code-output" style="margin-top: 16px;">
+                        <span class="code-line"><span class="sel">.box</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">margin</span>: <span class="val" id="codeMargin">0</span>;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <!-- 右侧：控制面板 -->
+                <div class="control-panel control-panel-wide">
+
+                    <!-- 控制组 A：四周有元素 -->
+                    <div id="marginPanelSurround">
+                        <h3>盒子自身的 margin</h3>
+
+                        <div class="control-group">
+                            <label><span>简写值数量</span><span class="value-display" id="valMarginMode">1 值</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-margin-mode="1">1 值</button>
+                                <button class="preset-btn" data-margin-mode="2">2 值</button>
+                                <button class="preset-btn" data-margin-mode="3">3 值</button>
+                                <button class="preset-btn" data-margin-mode="4">4 值</button>
+                            </div>
+                        </div>
+
+                        <div id="marginSliders" class="padding-sliders"></div>
+
+                        <h3 style="margin-top: 24px;">四周邻居的 margin</h3>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">
+                            拖动滑块观察：盒子与邻居之间的距离取「盒子 margin」与「邻居 margin」的较大值。
+                        </p>
+
+                        <div class="control-group">
+                            <label><span>上邻居 margin-bottom</span><span class="value-display" id="valSurroundTopM">0px</span></label>
+                            <input type="range" id="sliderSurroundTop" min="0" max="40" value="0" step="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>下邻居 margin-top</span><span class="value-display" id="valSurroundBottomM">0px</span></label>
+                            <input type="range" id="sliderSurroundBottom" min="0" max="40" value="0" step="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>左邻居 margin-right</span><span class="value-display" id="valSurroundLeftM">0px</span></label>
+                            <input type="range" id="sliderSurroundLeft" min="0" max="40" value="0" step="2">
+                        </div>
+                        <div class="control-group">
+                            <label><span>右邻居 margin-left</span><span class="value-display" id="valSurroundRightM">0px</span></label>
+                            <input type="range" id="sliderSurroundRight" min="0" max="40" value="0" step="2">
+                        </div>
+
+                        <div class="hint-box" id="surroundGapHint">
+                            <strong>💡 合并规则：</strong>盒子与邻居之间的距离取二者 margin 的<strong>较大值</strong>。
+                        </div>
+                    </div>
+
+                    <!-- 控制组 B：四周无元素 · 对齐方式 -->
+                    <div id="marginPanelAlign" style="display: none;">
+                        <h3>盒子在视口中的对齐方式</h3>
+
+                        <div class="control-group">
+                            <label><span>水平对齐</span><span class="value-display" id="valAlignH">flex-start（左）</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-align-h="flex-start">左对齐</button>
+                                <button class="preset-btn" data-align-h="center">居中</button>
+                                <button class="preset-btn" data-align-h="flex-end">右对齐</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>垂直对齐</span><span class="value-display" id="valAlignV">flex-start（上）</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-align-v="flex-start">上对齐</button>
+                                <button class="preset-btn" data-align-v="center">居中</button>
+                                <button class="preset-btn" data-align-v="flex-end">下对齐</button>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-top: 24px;">盒子的 margin</h3>
+
+                        <div class="control-group">
+                            <label><span>margin-top</span><span class="value-display" id="valAlignTop">0px</span></label>
+                            <input type="range" id="sliderAlignTop" min="0" max="80" value="0" step="4">
+                        </div>
+                        <div class="control-group">
+                            <label><span>margin-left</span><span class="value-display" id="valAlignLeft">0px</span></label>
+                            <input type="range" id="sliderAlignLeft" min="0" max="80" value="0" step="4">
+                        </div>
+                        <div class="control-group">
+                            <label><span>margin-bottom</span><span class="value-display" id="valAlignBottom">0px</span></label>
+                            <input type="range" id="sliderAlignBottom" min="0" max="80" value="0" step="4">
+                        </div>
+                        <div class="control-group">
+                            <label><span>margin-right</span><span class="value-display" id="valAlignRight">0px</span></label>
+                            <input type="range" id="sliderAlignRight" min="0" max="80" value="0" step="4">
+                        </div>
+
+                        <div class="hint-box" id="alignEffectHint">
+                            <strong>💡 观察要点：</strong>
+                            · 左 / 上对齐时：margin-top / left 表现为与视口上 / 左的距离；margin-bottom / right <strong>无法推远盒子</strong>。
+                            · 右对齐时：margin-right 生效，与视口右侧拉开距离。
+                            · 下对齐时：margin-bottom 生效，与视口底部拉开距离。
+                            · 居中时：margin 的两侧会相互挤压，盒子居中。
+                        </div>
+
+                        <div class="hint-box" id="alignHint" style="margin-top: 12px;">
+                            <strong>💡 当前：</strong>盒子在浏览器左上角，margin-top / left 生效，margin-bottom / right 无法推远盒子。
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 6：盒子的宽与高
+             ============================================================ -->
+        <section class="section-panel" id="section-size">
+            <div class="concept-card">
+                <h2>6. 盒子的宽与高</h2>
+                <p><code>width</code> 和 <code>height</code> 的含义取决于 <code>box-sizing</code>：
+                   <strong>content-box</strong>（默认）下 width/height 只作用于<strong>内容区</strong>，
+                   padding 和 border 会往外撑开，整体盒子尺寸变大；
+                   <strong>border-box</strong> 下 width/height 是<strong>内容 + padding + border 的总和</strong>，
+                   整体尺寸锁定，padding 和 border 的厚度不变，内容区被压缩或撑大。
+                   无论哪种模式，<strong>元素实际占用的总宽高都还要再加上 margin</strong>。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">宽高演示（width / height 作用于哪一层由 box-sizing 决定）</div>
+                    <div class="stage stage-unified">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport size-viewport">
+                                <!-- 粉色虚线框：模拟 margin 区域 -->
+                                <div class="size-margin-layer" id="sizeMarginLayer">
+                                    <span class="size-margin-label">margin</span>
+                                    <div class="size-demo-box" id="sizeDemoBox">
+                                        <div class="demo-box-content" id="sizeDemoContent">
+                                            <span id="sizeContentLabel">content</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calc-panel">
+                        <div class="calc-title">实际占用空间计算（含 margin）</div>
+                        <div class="calc-row" id="calcWidthRow"></div>
+                        <div class="calc-row" id="calcHeightRow"></div>
+                        <div class="calc-row calc-row-total" id="calcTotalWidthRow"></div>
+                        <div class="calc-row calc-row-total" id="calcTotalHeightRow"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide">
+                    <h3>box-sizing 对比</h3>
+
+                    <div class="control-group">
+                        <label><span>box-sizing</span><span class="value-display" id="valBoxSizing">content-box</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-box-sizing="content-box">content-box</button>
+                            <button class="preset-btn" data-box-sizing="border-box">border-box</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>width</span><span class="value-display" id="valSizeWidth">200px</span></label>
+                        <input type="range" id="sliderSizeWidth" min="100" max="360" value="200" step="10">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>height</span><span class="value-display" id="valSizeHeight">100px</span></label>
+                        <input type="range" id="sliderSizeHeight" min="60" max="200" value="100" step="10">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>padding</span><span class="value-display" id="valSizePadding">20px</span></label>
+                        <input type="range" id="sliderSizePadding" min="0" max="40" value="20" step="2">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>border-width</span><span class="value-display" id="valSizeBorder">5px</span></label>
+                        <input type="range" id="sliderSizeBorder" min="0" max="20" value="5" step="1">
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>margin</span><span class="value-display" id="valSizeMargin">10px</span></label>
+                        <input type="range" id="sliderSizeMargin" min="0" max="40" value="10" step="2">
+                    </div>
+
+                    <div class="hint-box">
+                        <strong>💡 观察要点：</strong><br>
+                        · <strong>content-box</strong>：拖动 width 时，content 区变化，padding 和 border 的厚度不变，
+                          但它们会被 content 往外撑开，整体橙框变大或变小。<br>
+                        · <strong>border-box</strong>：拖动 width 时，橙框整体尺寸严格等于 width，
+                          padding 和 border 的厚度不变，但 content 区被压缩或撑大。<br>
+                        · <strong>无论哪种模式</strong>，元素实际占用的<strong>总宽高</strong>都要再加上 <code>margin × 2</code>。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 7：背景属性
+             ============================================================ -->
+        <section class="section-panel" id="section-background">
+            <div class="concept-card">
+                <h2>7. 背景属性 background</h2>
+                <p>背景图片和背景颜色占据 <strong>content + padding</strong> 区域，
+                   不包含 border 和 margin。可以设置图片的平铺方式、位置、大小和固定方式。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">背景演示（滚动下方模拟浏览器观察 attachment 效果）</div>
+                    <div class="stage stage-scrollable">
+                        <div class="browser-frame">
+                            <div class="browser-bar">
+                                <span class="browser-dot red"></span>
+                                <span class="browser-dot yellow"></span>
+                                <span class="browser-dot green"></span>
+                                <span class="browser-url">http://localhost:8000</span>
+                            </div>
+                            <div class="browser-viewport scroll-viewport" id="bgScrollViewport">
+                                <div class="bg-scroll-content">
+                                    <div class="bg-demo-box" id="bgDemoBox">
+                                        <div class="bg-demo-border" id="bgDemoBorder">
+                                            <div class="bg-demo-padding" id="bgDemoPadding">
+                                                <div class="bg-fixed-image-layer" id="bgFixedImageLayer"></div>
+                                                <div class="bg-demo-content" id="bgDemoContent">
+                                                    内容 content
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-scroll-spacer">↓ 滚动区域 · 观察背景固定效果 ↓</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-output" style="margin-top: 16px;">
+                        <span class="code-line"><span class="sel">.box</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">background-color</span>: <span class="val" id="codeBgColor">#1e3a5f</span>;</span>
+                        <span class="code-line">  <span class="prop">background-image</span>: <span class="val" id="codeBgImage">url("../img/bg.png")</span>;</span>
+                        <span class="code-line">  <span class="prop">background-repeat</span>: <span class="val" id="codeBgRepeat">no-repeat</span>;</span>
+                        <span class="code-line">  <span class="prop">background-position</span>: <span class="val" id="codeBgPosition">center center</span>;</span>
+                        <span class="code-line">  <span class="prop">background-size</span>: <span class="val" id="codeBgSize">auto</span>;</span>
+                        <span class="code-line">  <span class="prop">background-attachment</span>: <span class="val" id="codeBgAttach">scroll</span>;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <div class="control-panel control-panel-wide">
+                    <h3>背景控制</h3>
+
+                    <div class="control-group">
+                        <label><span>background-color</span><span class="value-display" id="valBgColor">#1e3a5f</span></label>
+                        <div class="color-swatches">
+                            <button class="color-swatch active" data-bg-color="#1e3a5f" style="background:#1e3a5f"></button>
+                            <button class="color-swatch" data-bg-color="#3b82f6" style="background:#3b82f6"></button>
+                            <button class="color-swatch" data-bg-color="#10b981" style="background:#10b981"></button>
+                            <button class="color-swatch" data-bg-color="#f59e0b" style="background:#f59e0b"></button>
+                            <button class="color-swatch" data-bg-color="#ec4899" style="background:#ec4899"></button>
+                            <button class="color-swatch" data-bg-color="transparent" style="background: repeating-conic-gradient(#666 0% 25%, #333 0% 50%) 50% / 12px 12px;" title="transparent"></button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>background-image</span><span class="value-display" id="valBgImage">url("../img/bg.png")</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-bg-image="on">使用图片</button>
+                            <button class="preset-btn" data-bg-image="off">不使用图片</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>background-repeat</span><span class="value-display" id="valBgRepeat">no-repeat</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-bg-repeat="no-repeat">no-repeat</button>
+                            <button class="preset-btn" data-bg-repeat="repeat">repeat</button>
+                            <button class="preset-btn" data-bg-repeat="repeat-x">repeat-x</button>
+                            <button class="preset-btn" data-bg-repeat="repeat-y">repeat-y</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>background-position</span><span class="value-display" id="valBgPosition">center center</span></label>
+
+                        <div class="preset-btns preset-btns-wrap" id="bgPositionBtns">
+                            <button class="preset-btn" data-bg-position="left top">left top（左上）</button>
+                            <button class="preset-btn" data-bg-position="center top">center top（上中）</button>
+                            <button class="preset-btn" data-bg-position="right top">right top（右上）</button>
+                            <button class="preset-btn" data-bg-position="left center">left center（左中）</button>
+                            <button class="preset-btn active" data-bg-position="center center">center center（居中）</button>
+                            <button class="preset-btn" data-bg-position="right center">right center（右中）</button>
+                            <button class="preset-btn" data-bg-position="left bottom">left bottom（左下）</button>
+                            <button class="preset-btn" data-bg-position="center bottom">center bottom（下中）</button>
+                            <button class="preset-btn" data-bg-position="right bottom">right bottom（右下）</button>
+                        </div>
+
+                        <label style="margin-top: 10px;">
+                            <span>百分比控制（X / Y）</span>
+                            <span class="value-display" id="valBgPositionPercent">50% 50%</span>
+                        </label>
+                        <input type="range" id="sliderBgPosX" min="0" max="100" value="50">
+                        <input type="range" id="sliderBgPosY" min="0" max="100" value="50" style="margin-top: 6px;">
+
+                        <div class="hint-box" style="margin-top: 8px; font-size: 11px;">
+                            <strong>💡 二选一：</strong>点击上方选项按钮使用文本属性值（如 <code>left top</code>）；
+                            拖动下方滑块使用百分比值（如 <code>20% 30%</code>），此时按钮全部取消选中，
+                            但可以随时重新点击按钮切换回文本属性值。
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>background-size</span><span class="value-display" id="valBgSize">auto</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-bg-size-mode="px">px</button>
+                            <button class="preset-btn" data-bg-size-mode="%">%（相对盒子）</button>
+                            <button class="preset-btn" data-bg-size-mode="cover">cover</button>
+                            <button class="preset-btn" data-bg-size-mode="contain">contain</button>
+                        </div>
+
+                        <label style="margin-top: 10px;">
+                            <span>宽度</span>
+                            <span class="value-display" id="valBgSizeW">未设置</span>
+                        </label>
+                        <input type="range" id="sliderBgSizeW" min="0" max="200" value="0">
+
+                        <label style="margin-top: 8px;">
+                            <span>高度（留空则等比缩放）</span>
+                            <span class="value-display" id="valBgSizeH">未设置</span>
+                        </label>
+                        <input type="range" id="sliderBgSizeH" min="0" max="200" value="0">
+
+                        <div class="hint-box" style="margin-top: 8px; font-size: 11px;">
+                            <strong>💡 说明：</strong>两个滑块默认都在 <code>0</code>（最左），表示未设置 background-size。
+                            只拖动宽度滑块 → 只设置宽度，高度等比缩放；
+                            同时拖动宽度和高度 → 分别设置宽高；
+                            两个都在 0 → 属性值为 <code>auto</code>（使用图片原始尺寸）。
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label><span>background-attachment</span><span class="value-display" id="valBgAttach">scroll</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-bg-attach="scroll">scroll（跟随滚动）</button>
+                            <button class="preset-btn" data-bg-attach="fixed">fixed（固定在视口）</button>
+                        </div>
+                        <div class="hint-box" id="bgAttachHint" style="display: none; margin-top: 8px; font-size: 11px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+    </main>
+</div>
+
+<script type="module">
+    import { initAIAssistant } from '../js/components/ai-assistant.js'; 
+    initAIAssistant();
+	
+    import { initBoxModelModule } from '../js/modules/box-model.js';
+    initBoxModelModule();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我的学习档案 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+        .chart-card { background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: var(--radius-lg); padding: 20px; }
+        .chart-card h3 { color: var(--accent-cyan); margin-bottom: 16px; font-size: 16px; display: flex; align-items: center; gap: 8px;}
+        
+        /* 顶部 KPI */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: var(--bg-secondary); border: 1px solid var(--bg-tertiary); border-radius: var(--radius-md); padding: 20px; text-align: center; }
+        .kpi-val { font-size: 28px; font-weight: 800; font-family: var(--font-mono); color: var(--text-primary); margin-bottom: 4px; }
+        .kpi-label { font-size: 12px; color: var(--text-secondary); }
+        
+        /* AI 报告 */
+        .ai-report { background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(59,130,246,0.08)); border: 1px solid rgba(139,92,246,0.3); border-radius: var(--radius-lg); padding: 24px; margin-top: 24px; line-height: 1.8; }
+        .ai-report h3 { color: var(--accent-purple); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px dashed rgba(139,92,246,0.3); padding-bottom: 12px; }
+        
+        /* 错题本 */
+        .mistake-card { background: var(--bg-primary); border-left: 4px solid var(--accent-red); padding: 16px; border-radius: 4px; margin-bottom: 12px; }
+        .mistake-q { font-weight: bold; color: var(--text-primary); margin-bottom: 8px; }
+        .mistake-detail { font-size: 13px; color: var(--text-secondary); display: flex; gap: 16px; margin-bottom: 8px; }
+        .mistake-exp { font-size: 12px; color: var(--accent-cyan); background: rgba(6,182,212,0.05); padding: 8px; border-radius: 4px; }
+
+        @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: 1fr; } }
+        
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); background: var(--bg-secondary); border-radius: 16px; border: 1px dashed var(--bg-tertiary); margin-top: 24px; }
+    </style>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo"><span class="logo-mark">◈</span> CSS 原理工坊 <span class="logo-sub">AI 学情深度画像</span></div>
+    <nav class="top-nav"><a href="../index.html" class="nav-link">返回知识地图</a></nav>
+</header>
+
+<div class="page-layout">
+    <main class="main-content" style="grid-column: 1 / -1; max-width: 1200px; margin: 0 auto; display: block;">
+        
+        <div class="concept-card" style="background: linear-gradient(135deg, #1e293b, #1a2744);">
+            <h2 style="color: var(--accent-pink);">📊 AI 学情深度诊断报告</h2>
+            <p>基于大模型与多维行为埋点，生成你的专属能力图谱、学习风格与自适应路径建议。</p>
+        </div>
+
+        <div id="dashboardContent"></div>
+
+    </main>
+</div>
+
+<script type="module">
+    // ⚠️ 这里替换成你的 API KEY
+    const API_KEY = 'sk-906a58dd3a4e4271ae766af69f12e11b'; 
+
+    const profile = JSON.parse(localStorage.getItem('studentProfile')) || { modules: {} };
+    const modules = profile.modules;
+    const dashboardContainer = document.getElementById('dashboardContent');
+
+    if (Object.keys(modules).length === 0) {
+        dashboardContainer.innerHTML = `
+            <div class="empty-state">
+                <h2>🌱 你的数据画布还是空白的</h2>
+                <p>你还没有进行过任何 AI 挑战。快去各个模块挑战自己，系统才能为你生成专属的学情画像。</p>
+                <a href="box-model.html" class="btn btn-primary" style="margin-top: 16px;">去挑战盒子模型 →</a>
+            </div>
+        `;
+    } else {
+        // ==========================================
+        // 1. 计算核心 KPI 数据
+        // ==========================================
+        let totalScore = 0;
+        let learnedCount = 0;
+        let totalActions = 0;
+        
+        Object.values(modules).forEach(m => {
+            if (m.history && m.history.length > 0) {
+                learnedCount++;
+                totalScore += m.history.reduce((a,b)=>a+b,0) / m.history.length;
+                totalActions += m.history.length;
+            }
+        });
+        const avgScore = learnedCount > 0 ? Math.round((totalScore / learnedCount) * 100) : 0;
+        
+        // 模拟学习风格判定（基于理论：正确率高的往往是视觉驱动）
+        let learningStyle = '🧠 均衡发展型';
+        if (avgScore > 80) learningStyle = '👁️ 视觉驱动型 (对动画极其敏感)';
+        else if (avgScore < 50) learningStyle = '📖 需要文本与理论强化型';
+
+        // ==========================================
+        // 2. 渲染基础 HTML 结构
+        // ==========================================
+        dashboardContainer.innerHTML = `
+            <!-- KPI 概览 -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-val" style="color: var(--accent-cyan);">${learnedCount} <span style="font-size: 14px;">个</span></div>
+                    <div class="kpi-label">已探索知识模块</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-val" style="color: var(--accent-green);">${avgScore} <span style="font-size: 14px;">%</span></div>
+                    <div class="kpi-label">全站平均掌握度</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-val" style="font-size: 18px; color: var(--accent-orange); margin-top: 10px;">${learningStyle}</div>
+                    <div class="kpi-label">AI 学习风格判定</div>
+                </div>
+            </div>
+
+            <!-- 图表区 -->
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <h3><span>🎯</span> 知识能力图谱</h3>
+                    <div id="radarChart" style="width: 100%; height: 320px;"></div>
+                </div>
+                <div class="chart-card">
+                    <h3><span>📈</span> 历史成长轨迹</h3>
+                    <div id="lineChart" style="width: 100%; height: 320px;"></div>
+                </div>
+            </div>
+
+            <!-- AI 导师诊断区 -->
+            <div class="ai-report">
+                <h3><span>🤖</span> AI 智学导师多维诊断</h3>
+                <div id="aiReportText" style="color: var(--text-primary); font-size: 14px;">
+                    <span style="display: inline-block; animation: spin 1s linear infinite;">⚙️</span> AI 导师正在归因你的学情数据，生成个性化报告...
+                </div>
+            </div>
+            
+            <!-- 错题回顾区 -->
+            <div style="margin-top: 24px;">
+                <h3 style="color: var(--accent-red); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <span>📕</span> 专属错题追踪本
+                </h3>
+                <div id="mistakeList">
+                    <p style="color: var(--text-muted); font-size: 14px;">暂无错题记录，或者题库暂未返回错题明细。</p>
+                </div>
+            </div>
+        `;
+
+        // ==========================================
+        // 3. 渲染雷达图（自适应多模块）
+        // ==========================================
+        const ALL_MODULES = ['盒子模型', 'CSS3扩展', 'Display类型', 'Flexbox', '列表', '超链接', '表格', '表单', '浮动Float'];
+        const learnedModules = Object.keys(modules);
+        let chartIndicators = [];
+        let chartData = [];
+
+        if (learnedModules.length <= 8) {
+            ALL_MODULES.forEach(modName => {
+                chartIndicators.push({ name: modName, max: 100 });
+                if (modules[modName]) {
+                    const hist = modules[modName].history || [];
+                    const avg = hist.length > 0 ? (hist.reduce((a,b)=>a+b,0) / hist.length) : 0;
+                    chartData.push(Math.round(avg * 100));
+                } else { chartData.push(0); }
+            });
+        } else {
+            learnedModules.slice(0, 10).forEach(modName => {
+                chartIndicators.push({ name: modName, max: 100 });
+                const hist = modules[modName].history || [];
+                const avg = hist.length > 0 ? (hist.reduce((a,b)=>a+b,0) / hist.length) : 0;
+                chartData.push(Math.round(avg * 100));
+            });
+        }
+
+        const chartDom = document.getElementById('radarChart');
+        const chartTitle = chartDom.parentElement.querySelector('h3 span:last-child');
+        const myChart = echarts.init(chartDom);
+
+        if (chartIndicators.length <= 8) {
+            chartTitle.textContent = '知识能力雷达图';
+            myChart.setOption({
+                tooltip: {},
+                radar: {
+                    indicator: chartIndicators,
+                    radius: '65%',
+                    axisName: { color: '#94a3b8', fontSize: 11 },
+                    splitLine: { lineStyle: { color: '#334155' } },
+                    splitArea: { areaStyle: { color: ['rgba(6,182,212,0.02)', 'rgba(6,182,212,0.08)'] } }
+                },
+                series: [{
+                    type: 'radar',
+                    data: [{ value: chartData, name: '掌握度', areaStyle: { color: 'rgba(6,182,212,0.4)' }, itemStyle: { color: '#06b6d4' } }]
+                }]
+            });
+        } else {
+            chartTitle.textContent = '各模块掌握度排行榜';
+            myChart.setOption({
+                tooltip: { trigger: 'axis' },
+                grid: { left: '3%', right: '4%', bottom: '3%', top: '5%', containLabel: true },
+                xAxis: { type: 'value', max: 100, axisLabel: { color: '#94a3b8' }, splitLine: { lineStyle: { color: '#334155' } } },
+                yAxis: { type: 'category', data: chartIndicators.map(i => i.name).reverse(), axisLabel: { color: '#94a3b8' } },
+                series: [{
+                    type: 'bar',
+                    data: chartData.reverse(),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ offset: 0, color: '#06b6d4' }, { offset: 1, color: '#3b82f6' }]),
+                        borderRadius: [0, 4, 4, 0]
+                    },
+                    barWidth: '60%'
+                }]
+            });
+        }
+
+        // ==========================================
+        // 4. 渲染折线图（历史趋势）
+        // ==========================================
+        let allHistory = [];
+        Object.keys(modules).forEach(modName => {
+            const hist = modules[modName].history || [];
+            allHistory = allHistory.concat(hist);
+        });
+        if (allHistory.length > 10) allHistory = allHistory.slice(-10);
+        
+        const xAxisData = allHistory.map((_, i) => `第${i+1}次`);
+        const yAxisData = allHistory.map(v => Math.round(v * 100));
+
+        const lineChart = echarts.init(document.getElementById('lineChart'));
+        lineChart.setOption({
+            tooltip: { trigger: 'axis' },
+            xAxis: { type: 'category', data: xAxisData, axisLabel: { color: '#94a3b8' } },
+            yAxis: { type: 'value', max: 100, axisLabel: { color: '#94a3b8' }, splitLine: { lineStyle: { color: '#334155' } } },
+            series: [{
+                name: '正确率(%)', type: 'line', smooth: true, data: yAxisData,
+                itemStyle: { color: '#ec4899' },
+                areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{ offset: 0, color: 'rgba(236,72,153,0.5)' }, { offset: 1, color: 'rgba(236,72,153,0)' }]) }
+            }]
+        });
+
+        window.addEventListener('resize', () => { myChart.resize(); lineChart.resize(); });
+
+        // ==========================================
+        // 新增：渲染真实的错题本
+        // ==========================================
+        const mistakes = JSON.parse(localStorage.getItem('mistakeBook')) || [];
+        const mistakeList = document.getElementById('mistakeList');
+        
+        if (mistakeList) {
+            if (mistakes.length === 0) {
+                mistakeList.innerHTML = `<p style="color: var(--accent-green); font-size: 14px;">🎉 太棒了，暂无错题记录！</p>`;
+            } else {
+                mistakeList.innerHTML = mistakes.map((m, i) => `
+                    <div class="mistake-card">
+                        <div class="mistake-q">${i + 1}. ${m.question}</div>
+                        <div class="mistake-detail">
+                            <span>✅ 正确答案：<strong style="color: var(--accent-green);">${m.correctAnswer}</strong></span>
+                            <span style="color: var(--text-muted);">记录时间：${m.time}</span>
+                        </div>
+                        <div class="mistake-exp">💡 解析：${m.explanation}</div>
+                    </div>
+                `).join('');
+            }
+        }
+        // ==========================================
+        // 5. 动态生成 AI 多维评语
+        // ==========================================
+        async function generateAIReport() {
+            const reportBox = document.getElementById('aiReportText');
+            
+            // 构造纯净数据
+            const dataString = Object.keys(modules).map(modName => {
+                const hist = modules[modName].history || [];
+                const avg = hist.length > 0 ? (hist.reduce((a,b)=>a+b,0) / hist.length) : 0;
+                return `${modName}：正确率 ${Math.round(avg * 100)}%`;
+            }).join('\n');
+
+            // 如果没有 Key，直接显示本地分析
+            if (!API_KEY || API_KEY.includes('你的') || API_KEY.length < 20) {
+                reportBox.innerHTML = `系统分析：<br>${dataString.replace(/\n/g, '<br>')}<br><br>💡 **本地建议**：检测到未配置大模型 API Key，目前展示为本地规则分析。建议前往配置以获得深度诊断。`;
+                return;
+            }
+
+            // 极其严格的系统提示词
+            const systemPrompt = `你是一个拥有教育学博士学位、深谙计算机基础教学的顶尖 AI 智学导师。
+请根据学生的【各模块平均正确率】数据，输出一份极具专业感、多维度的学习诊断报告。
+请严格使用以下结构（直接输出 HTML 标签，不要用 Markdown 的星号或代码块）：
+<div style="margin-bottom: 16px; padding: 12px; background: rgba(6,182,212,0.1); border-radius: 8px;">
+  <h4 style="color: var(--accent-cyan); margin-bottom: 8px;">🌟 1. 学习风格与优势画像</h4>
+  <p>（根据正确率，判断学生是视觉驱动型还是理论扎实型，并用鼓励的语气表扬其掌握最好的模块）</p>
+</div>
+<div style="margin-bottom: 16px; padding: 12px; background: rgba(245,158,11,0.1); border-radius: 8px;">
+  <h4 style="color: var(--accent-orange); margin-bottom: 8px;">🔍 2. 核心薄弱点认知归因</h4>
+  <p>（点名正确率较低的模块，结合前端知识体系，深度分析他们为什么会在这里卡壳，比如“浮动容易导致高度塌陷”、“Flexbox主轴概念抽象”等）</p>
+</div>
+<div style="padding: 12px; background: rgba(16,185,129,0.1); border-radius: 8px;">
+  <h4 style="color: var(--accent-green); margin-bottom: 8px;">🚀 3. 自适应学习路径规划</h4>
+  <p>（给出至少两条具体的行动建议，例如：先去观看某模块的演示动画，再去 AI 题库进行几题巩固训练）</p>
+</div>
+语气要专业、温暖、具有启发性，字数控制在300字左右。`;
+
+            try {
+                const res = await fetch('https://api.deepseek.com/chat/completions', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': `Bearer ${API_KEY.trim()}` 
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: `我的学情数据如下：\n${dataString}` }
+                        ]
+                    })
+                });
+                
+                if(!res.ok) {
+                    throw new Error(`请求失败: 状态码 ${res.status}`);
+                }
+                
+                const data = await res.json();
+                // 去除可能返回的 markdown 标记
+                let reply = data.choices[0].message.content;
+                reply = reply.replace(/```html/g, '').replace(/```/g, '');
+                reportBox.innerHTML = reply;
+                
+            } catch (e) {
+                console.error("AI请求失败：", e);
+                // 失败时的高级兜底
+                reportBox.innerHTML = `
+                    <div style="color: var(--accent-red); margin-bottom: 12px;">⚠️ AI 导师连接失败 (${e.message})，已切换至本地数据分析：</div>
+                    <div style="color: var(--text-secondary); margin-bottom: 12px;">${dataString.replace(/\n/g, '<br>')}</div>
+                    <div style="color: var(--accent-green);">💡 **本地建议**：请检查 API Key 与余额。针对低正确率模块，建议先回看演示动画，再进行降级巩固。</div>
+                `;
+            }
+        }
+
+        // 延迟一点执行，确保 DOM 都渲染完毕
+        setTimeout(() => {
+            generateAIReport();
+        }, 500);
+    }
+
+</script>
+</body>
+</html>

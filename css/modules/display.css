@@ -1,0 +1,298 @@
+/* ================================================================
+   display.css · Display 类型专属样式
+   ================================================================ */
+
+.section-panel { display: none; animation: fadeIn 0.35s ease; }
+.section-panel.active { display: block; }
+
+/* ================================================================
+   演示舞台
+   ================================================================ */
+.stage-display-demo {
+    padding: 30px;
+    min-height: 360px;
+    display: block;
+}
+
+.display-demo-container {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px dashed var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    min-height: 260px;
+    display: block;
+    line-height: 2;
+    font-size: 14px;
+}
+
+/* ================================================================
+   元素基础样式
+   ================================================================ */
+.display-item {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    vertical-align: middle;
+    overflow: visible;
+    width: 100px;
+    height: 50px;
+}
+
+.display-item-1 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.display-item-2 { background: linear-gradient(135deg, #10b981, #059669); }
+.display-item-3 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+.display-item-text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.display-value {
+    color: #fbbf24;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 2px;
+}
+
+/* ================================================================
+   display 模式切换
+   ================================================================ */
+
+/* block：独占一行 */
+.display-item.display-block {
+    display: block;
+    margin: 8px 0;
+}
+
+/* inline：不换行，无法设宽高 */
+.display-item.display-inline {
+    display: inline;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 4px;
+    padding: 4px 10px;
+    line-height: 1.6;
+    vertical-align: middle;
+}
+
+.display-item.display-inline .display-item-text {
+    display: inline;
+    width: auto;
+    height: auto;
+    padding: 0;
+    white-space: normal;
+}
+
+/* inline-block：不换行，可设宽高 */
+.display-item.display-inline-block {
+    display: inline-block;
+    margin: 4px;
+}
+
+/* flex / grid 独占一行 */
+.display-item.display-flex,
+.display-item.display-grid {
+    display: block;
+    margin: 8px 0;
+}
+
+/* ================================================================
+   实时代码区（CSS / HTML 双标签）
+   ================================================================ */
+.live-code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 8px;
+    background: #0d1420;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.live-code-tabs {
+    display: flex;
+    gap: 2px;
+}
+
+.live-code-tab {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.live-code-tab:hover {
+    color: var(--text-secondary);
+}
+
+.live-code-tab.active {
+    color: var(--accent-cyan);
+    border-bottom-color: var(--accent-cyan);
+}
+
+.live-code-tag {
+    font-size: 10px;
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+#displayLiveCode {
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+#displayLiveCode pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+#displayLiveCode .sel { color: var(--accent-cyan); }
+#displayLiveCode .prop { color: var(--accent-pink); }
+#displayLiveCode .val { color: var(--accent-orange); }
+#displayLiveCode .comment { color: var(--text-muted); font-style: italic; }
+#displayLiveCode .tag { color: var(--accent-blue); }
+
+/* ================================================================
+   右侧控制面板
+   ================================================================ */
+.display-controls-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.display-control-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+}
+
+.display-control-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+/* 禁用状态的滑块 */
+input[type="range"]:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+    background: var(--text-muted);
+    box-shadow: 0 0 0 2px var(--text-muted);
+}
+
+/* ================================================================
+   对比表格（美化版）
+   ================================================================ */
+.mini-table-wrapper {
+    margin-top: 20px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--bg-tertiary);
+    background: var(--bg-secondary);
+}
+
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.mini-table thead tr {
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(59, 130, 246, 0.12));
+    border-bottom: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.mini-table th {
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 11.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    white-space: nowrap;
+}
+
+.mini-table td {
+    padding: 12px 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+.mini-table tbody tr:nth-child(odd) td {
+    background: rgba(15, 23, 42, 0.35);
+}
+
+.mini-table tbody tr:hover td {
+    background: rgba(6, 182, 212, 0.07);
+    color: var(--text-primary);
+}
+
+.mini-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.mini-table td:first-child {
+    font-weight: 700;
+    color: var(--accent-blue);
+    font-family: var(--font-mono);
+}
+
+.mini-table code {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--accent-cyan);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
+    display: inline-block;
+    margin: 1px 0;
+}

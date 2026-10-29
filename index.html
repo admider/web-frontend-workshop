@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 原理工坊 · 交互式学习平台</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span>
+        CSS 原理工坊
+        <span class="logo-sub">交互式学习平台</span>
+    </div>
+    <nav class="top-nav">
+        <a href="index.html" class="nav-link active">知识地图</a>
+        <a href="pages/box-model.html" class="nav-link">开始学习</a>
+		<a href="pages/student-profile.html" class="nav-link" style="color: var(--accent-pink); font-weight: bold;">
+		        📊 我的学情档案
+		</a>
+    </nav>
+</header>
+
+<main class="home-container">
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>看透 CSS 的<span class="accent">底层原理</span></h1>
+        <p>通过可视化动画、图层分解和交互实验，理解盒子模型、浮动、定位等核心概念背后的真实机制。</p>
+        <div class="hero-actions">
+            <a href="pages/box-model.html" class="btn btn-primary btn-lg">从盒子模型开始 →</a>
+            <a href="#modules" class="btn btn-secondary btn-lg">浏览所有模块</a>
+        </div>
+    </section>
+
+    <!-- 模块导航 -->
+    <section class="modules-section" id="modules">
+        <div class="section-header">
+            <h2>学习模块</h2>
+            <p>每个模块包含演示、探索、挑战三种交互模式</p>
+        </div>
+
+        <div class="module-grid">
+
+            <a href="pages/box-model.html" class="module-card available">
+                <div class="module-icon">📦</div>
+                <h3>盒子模型</h3>
+                <p>content / padding / border / margin 四层结构，以及 box-sizing 的作用</p>
+                <div class="module-tags">
+                    <span class="tag">演示</span>
+                    <span class="tag">探索</span>
+                    <span class="tag">挑战</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+			
+            <a href="pages/css3.html" class="module-card available">
+                <div class="module-icon">✨</div>
+                <h3>CSS3 扩展</h3>
+                <p>圆角、阴影、透明度、以及九宫格图片边框的动画演示</p>
+                <div class="module-tags">
+                    <span class="tag">九宫格</span>
+                    <span class="tag">border-image</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+
+            <a href="pages/display.html" class="module-card available">
+                <div class="module-icon">🔀</div>
+                <h3>Display 元素类型</h3>
+                <p>block、inline、inline-block 的核心区别与互相转换原理</p>
+                <div class="module-tags">
+                    <span class="tag">属性切换</span>
+                    <span class="tag">实时渲染</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+
+              <a href="pages/flexbox.html" class="module-card available">
+                  <div class="module-icon">📐</div>
+                  <h3>Flexbox 弹性盒子</h3>
+                  <p>主轴、交叉轴与剩余空间按比例分配动画，及常见布局案例库</p>
+                  <div class="module-tags">
+                      <span class="tag">空间分配</span>
+                      <span class="tag">案例弹窗</span>
+                  </div>
+                  <div class="module-arrow">→</div>
+              </a>
+			
+            <a href="pages/list.html" class="module-card available">
+                <div class="module-icon">📋</div>
+                <h3>列表</h3>
+                <p>无序、有序、定义列表，以及列表样式属性</p>
+                <div class="module-tags">
+                    <span class="tag">标签演示</span>
+                    <span class="tag">列表样式</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+			
+            <a href="pages/link.html" class="module-card available">
+                <div class="module-icon">🔗</div>
+                <h3>超链接与伪类</h3>
+                <p>L-V-H-A 原理、锚点、焦点控制与无障碍设计</p>
+                <div class="module-tags">
+                    <span class="tag">伪类动画</span>
+                    <span class="tag">交互</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+			
+            <a href="pages/table.html" class="module-card available">
+                <div class="module-icon">📊</div>
+                <h3>表格 Table</h3>
+                <p>表格合并（colspan/rowspan）、旧属性讲解与 CSS 现代化美化</p>
+                <div class="module-tags">
+                    <span class="tag">colspan / rowspan</span>
+                    <span class="tag">border-collapse</span>
+                    <span class="tag">斑马线</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+			
+            <a href="pages/form.html" class="module-card available">
+                <div class="module-icon">📝</div>
+                <h3>表单 Form</h3>
+                <p>form 容器、input 控件全家桶，以及利用 :checked 伪类实现的高级纯 CSS 美化</p>
+                <div class="module-tags">
+                    <span class="tag">控件</span>
+                    <span class="tag">伪类联动</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+			
+            <a href="pages/float.html" class="module-card available">
+                <div class="module-icon">🌊</div>
+                <h3>浮动 Float</h3>
+                <p>用 3D 图层模型理解浮动元素如何脱离文档流、共享浮动图层</p>
+                <div class="module-tags">
+                    <span class="tag">3D 图层</span>
+                    <span class="tag">动画演示</span>
+                </div>
+                <div class="module-arrow">→</div>
+            </a>
+
+            <div class="module-card coming-soon">
+                <div class="module-icon">📍</div>
+                <h3>定位 Position</h3>
+                <p>static / relative / absolute / fixed / sticky 五种定位方式</p>
+                <div class="module-badge">即将推出</div>
+            </div>
+
+            <div class="module-card coming-soon">
+                <div class="module-icon">🔲</div>
+                <h3>Grid</h3>
+                <p>网格布局的行列定义与区域划分</p>
+                <div class="module-badge">规划中</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色说明 -->
+    <section class="features-section">
+        <div class="section-header">
+            <h2>为什么用这个平台</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎬</div>
+                <h4>分步动画</h4>
+                <p>把抽象的 CSS 规则拆解成一步步的动画，每一步都有文字说明</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h4>图层分解</h4>
+                <p>用 3D 视角展示元素如何从文档流"升起"到独立图层</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧪</div>
+                <h4>自由探索</h4>
+                <p>拖动滑块、切换开关，实时观察属性变化对布局的影响</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h4>概念挑战</h4>
+                <p>针对常见迷思概念设计的选择题，先预测再验证</p>
+            </div>
+        </div>
+    </section>
+	
+	<!-- 学习数据看板 -->
+	<section class="analytics-section" style="padding: 40px 24px; background: var(--bg-secondary); margin-top: 20px; border-radius: 16px;">
+	    <h2 style="color: var(--accent-cyan); margin-bottom: 20px;">📊 学习数据看板 (模拟)</h2>
+	    <div id="studyChart" style="width: 100%; height: 300px;"></div>
+	</section>
+	<!-- 引入 ECharts -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+    <footer class="home-footer">
+        <p>CSS 原理工坊 · 一个用于教学演示的交互式平台</p>
+    </footer>
+
+</main>
+<script type="module">
+    import { initAIAssistant } from './js/components/ai-assistant.js'; 
+    initAIAssistant();
+	
+	import { initLearnBoard } from './js/core/learn-board.js';
+	initLearnBoard();
+</script>
+</body>
+</html>

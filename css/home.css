@@ -1,0 +1,238 @@
+/* ================================================================
+   home.css · 首页专属样式
+   ================================================================ */
+
+.home-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+}
+
+/* ========== Hero ========== */
+.hero {
+    padding: 80px 0 60px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+}
+
+.hero h1 .accent {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ========== Section 通用 ========== */
+.modules-section,
+.features-section {
+    padding: 60px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+/* ========== 模块卡片网格 ========== */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.module-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: all var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.module-card.available {
+    cursor: pointer;
+}
+
+.module-card.available:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(6, 182, 212, 0.15);
+}
+
+.module-card.available::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(180deg, var(--accent-cyan), var(--accent-blue));
+    transition: height 0.4s ease;
+}
+
+.module-card.available:hover::before {
+    height: 100%;
+}
+
+.module-card.coming-soon {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.module-icon {
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.module-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.module-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+}
+
+.module-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    font-weight: 600;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.module-arrow {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    font-size: 20px;
+    color: var(--accent-cyan);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all var(--transition-base);
+}
+
+.module-card.available:hover .module-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.module-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--bg-tertiary);
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ========== 特色卡片 ========== */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: all var(--transition-base);
+}
+
+.feature-card:hover {
+    border-color: var(--bg-elevated);
+    transform: translateY(-2px);
+}
+
+.feature-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+}
+
+.feature-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ========== 页脚 ========== */
+.home-footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid var(--bg-tertiary);
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ========== 响应式 ========== */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .hero p { font-size: 16px; }
+    .section-header h2 { font-size: 24px; }
+    .hero { padding: 40px 0 30px; }
+    .modules-section,
+    .features-section { padding: 40px 0; }
+}

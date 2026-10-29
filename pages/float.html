@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浮动 Float · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/float.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span>
+        CSS 原理工坊
+        <span class="logo-sub">浮动 Float</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-section-title">布局基础</div>
+
+        <a href="box-model.html" class="sidebar-nav-item">
+            <span class="nav-icon">📦</span>
+            <span class="nav-label">盒子模型</span>
+        </a>
+
+        <button class="sidebar-nav-item active">
+            <span class="nav-icon">🌊</span>
+            <span class="nav-label">浮动 Float</span>
+        </button>
+
+        <button class="sidebar-nav-item coming-soon" disabled>
+            <span class="nav-icon">📍</span>
+            <span class="nav-label">定位 Position</span>
+            <span class="nav-status">即将推出</span>
+        </button>
+
+        <div class="sidebar-section-title">布局进阶</div>
+
+        <button class="sidebar-nav-item coming-soon" disabled>
+            <span class="nav-icon">📐</span>
+            <span class="nav-label">Flexbox</span>
+            <span class="nav-status">规划中</span>
+        </button>
+
+        <button class="sidebar-nav-item coming-soon" disabled>
+            <span class="nav-icon">🔲</span>
+            <span class="nav-label">Grid</span>
+            <span class="nav-status">规划中</span>
+        </button>
+    </aside>
+
+    <main class="main-content">
+
+        <!-- 演示模式 -->
+        <div class="panel active" id="panel-demo">
+            <div class="concept-card">
+                <h2>浮动 Float · 共享浮动图层</h2>
+                <p>所有设置了 <code>float</code> 的元素，都会从<strong>文档流图层</strong>升起，进入<strong>同一个共享的浮动图层</strong>。
+                   在这个浮动图层上，它们互相感知对方的位置，按浮动方向依次排列。原位置被释放，后续元素前移填补。</p>
+                <div class="analogy">💡 关键：浮动元素共享同一层，不是各自独立漂浮</div>
+            </div>
+
+            <div class="step-indicator" id="float-stepIndicator">
+                <div class="step-dot active"><span class="num">1</span> 同一图层</div>
+                <div class="step-dot"><span class="num">2</span> A 升起</div>
+                <div class="step-dot"><span class="num">3</span> 后续前移</div>
+                <div class="step-dot"><span class="num">4</span> B 也升起</div>
+                <div class="step-dot"><span class="num">5</span> C 也升起</div>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-header">
+                        <div class="stage-label">3D 图层舞台</div>
+                        <div class="view-toggle">
+                            <button class="active" data-view="isometric">等轴视角</button>
+                            <button data-view="flat">正视视角</button>
+                        </div>
+                    </div>
+
+                    <div class="stage-3d">
+                        <div class="stage-scene isometric" id="stageScene">
+
+                            <!-- 文档流图层 -->
+                            <div class="layer-plane flow" style="transform: translateZ(0px);">
+                                <div class="plane-surface"></div>
+                                <div class="plane-label">📄 文档流图层 · Document Flow</div>
+
+                                <div class="flow-container">
+                                    <div class="elem elem-a" id="elemA_flow">A</div>
+                                    <div class="elem elem-b" id="elemB_flow">B</div>
+                                    <div class="elem elem-c" id="elemC_flow">C</div>
+                                </div>
+
+                                <div class="text-flow" id="textFlow">
+                                    <p>文字内容留在文档流图层上，会环绕浮动元素 —— 这是浮动最初的用途。</p>
+                                </div>
+                            </div>
+
+                            <!-- 共享浮动图层 -->
+                            <div class="layer-plane float" id="floatLayer" style="transform: translateZ(0px); pointer-events: none;">
+                                <div class="plane-surface"></div>
+                                <div class="plane-label">🌊 共享浮动图层 · Shared Float Layer</div>
+                                <div class="float-layer-container float-left-group" id="floatLeftGroup"></div>
+                                <div class="float-layer-container float-right-group" id="floatRightGroup"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="play-controls">
+                        <button class="btn btn-primary" id="playBtn">▶ 播放图层动画</button>
+                        <button class="btn btn-secondary" id="stepBtn">⏭ 下一步</button>
+                        <button class="btn btn-secondary" id="resetBtn">↺ 重置</button>
+                    </div>
+
+                    <div class="hint-box" id="float-hintBox"></div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <span class="legend-swatch flow-swatch"></span>
+                            文档流图层
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-swatch float-swatch"></span>
+                            共享浮动图层
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer-stack-panel">
+                    <h3>图层栈</h3>
+                    <div class="subtitle">从下到上叠加，最上层离用户最近</div>
+
+                    <div class="shared-float-layer" id="cardSharedFloat" style="opacity: 0.35; transition: opacity 0.4s;">
+                        <div class="shared-thumb" id="sharedThumbs"></div>
+                        <div class="layer-info" style="flex:1;">
+                            <div class="layer-name">🌊 共享浮动图层</div>
+                            <div class="layer-meta" id="sharedFloatMeta">当前为空</div>
+                        </div>
+                    </div>
+
+                    <div class="layer-card">
+                        <div class="layer-thumb" style="background: linear-gradient(135deg, #334155, #1e293b); border: 1px dashed #3b82f6;">📄</div>
+                        <div class="layer-info">
+                            <div class="layer-name">文档流图层</div>
+                            <div class="layer-meta" id="flowLayerMeta">A、B、C 依次排列</div>
+                        </div>
+                        <span class="layer-badge flow-badge">BASE</span>
+                    </div>
+
+                    <div class="depth-indicator">
+                        <span class="depth-label">Z 轴</span>
+                        <div class="depth-bar">
+                            <div class="depth-fill" id="depthFill" style="width: 10%;"></div>
+                        </div>
+                        <span class="depth-value" id="depthValue">z: 0</span>
+                    </div>
+
+                    <div style="margin-top: 24px;">
+                        <h3>手动控制</h3>
+                        <div class="subtitle">单独控制每个元素的浮动状态</div>
+
+                        <div class="control-group">
+                            <label><span>元素 A</span><span class="value-display" id="ctrlValA">none</span></label>
+                            <div class="preset-btns">
+                                <button class="preset-btn active" data-elem="a" data-float="none">none</button>
+                                <button class="preset-btn" data-elem="a" data-float="left">left</button>
+                                <button class="preset-btn" data-elem="a" data-float="right">right</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>元素 B</span><span class="value-display" id="ctrlValB">none</span></label>
+                            <div class="preset-btns">
+                                <button class="preset-btn active" data-elem="b" data-float="none">none</button>
+                                <button class="preset-btn" data-elem="b" data-float="left">left</button>
+                                <button class="preset-btn" data-elem="b" data-float="right">right</button>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>元素 C</span><span class="value-display" id="ctrlValC">none</span></label>
+                            <div class="preset-btns">
+                                <button class="preset-btn active" data-elem="c" data-float="none">none</button>
+                                <button class="preset-btn" data-elem="c" data-float="left">left</button>
+                                <button class="preset-btn" data-elem="c" data-float="right">right</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-output">
+                        <span class="code-line"><span class="comment">/* 当前 CSS */</span></span>
+                        <span class="code-line"><span class="sel">.box-a</span> <span class="brace">{</span> <span class="prop">float</span>: <span class="val" id="codeFloatA">none</span>; <span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.box-b</span> <span class="brace">{</span> <span class="prop">float</span>: <span class="val" id="codeFloatB">none</span>; <span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.box-c</span> <span class="brace">{</span> <span class="prop">float</span>: <span class="val" id="codeFloatC">none</span>; <span class="brace">}</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI 代码诊断导师 -->
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+
+    </main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initFloatModule } from '../js/modules/float.js';
+
+    // 模式切换
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + btn.dataset.mode).classList.add('active');
+        });
+    });
+
+    // 初始化模块
+    initFloatModule();
+</script>
+
+</body>
+</html>

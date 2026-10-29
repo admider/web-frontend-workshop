@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试目标页面 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <style>
+        body { padding: 40px; font-family: sans-serif; background: var(--bg-primary); color: var(--text-primary); }
+        .box { background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--bg-tertiary); }
+        a { color: var(--accent-cyan); }
+        .anchor-target { margin-top: 600px; padding: 30px; background: rgba(16, 185, 129, 0.1); border: 2px dashed #10b981; border-radius: 8px; text-align: center; }
+        .btn-back { display: inline-block; padding: 10px 20px; background: var(--accent-blue); color: white; text-decoration: none; border-radius: 6px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🎯 这是一个真实的测试目标页面</h1>
+    <div class="box">
+        <p>如果你能看到这个页面，说明你成功测试了 <code>&lt;a href="target-test.html"&gt;</code> 的本地页面跳转功能。</p>
+        <p>同时，这个页面也用于测试<span style="color: var(--accent-orange); font-weight: bold;">“跳转到其他页面的锚点”</span>功能。</p>
+        <a href="../pages/link.html" class="btn-back">← 返回超链接教学页面</a>
+    </div>
+
+    <!-- 跨页跳转的锚点目标 -->
+    <div id="other-page-anchor" class="anchor-target">
+        <h2>✅ 成功定位到目标锚点！</h2>
+        <p>当前 URL 包含：<code>#other-page-anchor</code></p>
+        <p>这说明浏览器在加载新页面后，自动寻找到了 <code>id="other-page-anchor"</code> 的元素并滚动到了这里。</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox 弹性盒子 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/flexbox.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span>
+        CSS 原理工坊
+        <span class="logo-sub">Flexbox 弹性盒子</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <!-- ========== 侧边栏 ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-section-title">Flexbox</div>
+        
+        <button class="sidebar-nav-item active" data-section="main">
+            <span class="nav-icon">📐</span><span class="nav-label">弹性盒子布局</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item"><span class="nav-icon">📦</span><span class="nav-label">盒子模型</span></a>
+        <a href="float.html" class="sidebar-nav-item"><span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span></a>
+        <a href="display.html" class="sidebar-nav-item"><span class="nav-icon">🔀</span><span class="nav-label">Display 类型</span></a>
+        <a href="css3.html" class="sidebar-nav-item"><span class="nav-icon">✨</span><span class="nav-label">CSS3 扩展</span></a>
+    </aside>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main-content">
+        
+        <section class="section-panel active" id="section-main">
+            
+            <div class="concept-card">
+                <h2>Flexbox 弹性盒子布局</h2>
+                <p>将容器的 <code>display</code> 属性值改为 <code>flex</code>，容器变为<strong>弹性容器</strong>，内部子元素变为<strong>弹性子项</strong>。
+                   Flexbox 通过<strong>主轴（Main Axis）</strong>和<strong>交叉轴（Cross Axis）</strong>来控制布局。</p>
+            </div>
+        
+            <!-- 整体布局：左演示，右控制 -->
+            <div class="demo-layout">
+                
+                <!-- ================= 左侧：可视化大屏 ================= -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">Flexbox 实时演示与原理图解</div>
+                    
+                    <!-- 演示舞台 -->
+                    <div class="stage" style="padding: 20px; min-height: auto; flex-direction: column; align-items: stretch;">
+                        <div class="flex-container-visual" id="flexContainer" style="margin: 0 auto;">
+                            <div class="flex-axis main-axis" id="mainAxis">
+                                <span class="axis-label">主轴 Main Axis →</span>
+                            </div>
+                            <div class="flex-axis cross-axis" id="crossAxis">
+                                <span class="axis-label">交叉轴 Cross Axis ↓</span>
+                            </div>
+                            <!-- 子元素由 JS 动态生成 -->
+                        </div>
+                        
+                        <div class="play-controls" style="margin-top: 16px; justify-content: center;">
+                            <button class="btn btn-primary" id="flexPlayBtn">▶ 演示空间分配</button>
+                        </div>
+                    </div>
+
+                    <!-- 空间分配公式 -->
+                    <div class="flex-theory-area" style="width: 100%; margin-top: 16px; position: static;">
+                        <h4>空间分配公式</h4>
+                        <div class="theory-card" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 120px;">
+                                <div class="theory-row">
+                                    <span>容器总宽</span>
+                                    <span class="val" id="theoryContainerW">600px</span>
+                                </div>
+                                <div class="theory-row">
+                                    <span>子项基准尺寸和</span>
+                                    <span class="val" id="theoryBasisW">300px</span>
+                                </div>
+                            </div>
+                            <div style="flex: 1; min-width: 120px;">
+                                <div class="theory-row highlight">
+                                    <span>剩余空间</span>
+                                    <span class="val" id="theoryRemaining">300px</span>
+                                </div>
+                                <div class="theory-row">
+                                    <span>flex 比例之和</span>
+                                    <span class="val" id="theoryFlexSum">4</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top: 16px;">每个子项的最终宽度</h4>
+                        <div class="theory-card" id="theoryItemsList" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 实时代码 -->
+                    <div class="code-output" style="margin-top: 16px;">
+                        <span class="code-line"><span class="sel">.container</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">display</span>: <span class="val" id="codeFlexDisplay">flex</span>;</span>
+                        <span class="code-line">  <span class="prop">flex-direction</span>: <span class="val" id="codeFlexDir">row</span>;</span>
+                        <span class="code-line">  <span class="prop">flex-wrap</span>: <span class="val" id="codeFlexWrap">nowrap</span>;</span>
+                        <span class="code-line">  <span class="prop">justify-content</span>: <span class="val" id="codeFlexJustify">flex-start</span>;</span>
+                        <span class="code-line" id="codeAlignItemsLine">  <span class="prop">align-items</span>: <span class="val" id="codeFlexAlign">center</span>;</span>
+                        <span class="code-line" id="codeAlignContentLine" style="display: none;">  <span class="prop">align-content</span>: <span class="val" id="codeFlexAlignContent">flex-start</span>;</span>
+                        <span class="code-line">  <span class="prop">gap</span>: <span class="val" id="codeFlexGap">20px</span>;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                        <span class="code-line" id="codeItemsLines">
+                            <!-- 动态生成代码行 -->
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ================= 右侧：交互控制面板 ================= -->
+                <div class="control-panel">
+                    <h3>Flex 容器属性</h3>
+            
+                    <div class="control-group">
+                        <label><span>display</span><span class="value-display" id="valFlexDisplay">flex</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn" data-flex-display="block">block</button>
+                            <button class="preset-btn active" data-flex-display="flex">flex</button>
+                        </div>
+                    </div>
+            
+                    <div id="flexContainerControls">
+                        <div class="control-group">
+                            <label><span>子元素数量</span><span class="value-display" id="valFlexCount">3</span></label>
+                            <input type="range" id="sliderFlexCount" min="2" max="8" value="3" step="1">
+                        </div>
+            
+                        <div class="control-group">
+                            <label><span>flex-direction</span><span class="value-display" id="valFlexDir">row</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-flex-dir="row">row</button>
+                                <button class="preset-btn" data-flex-dir="row-reverse">row-reverse</button>
+                                <button class="preset-btn" data-flex-dir="column">column</button>
+                                <button class="preset-btn" data-flex-dir="column-reverse">column-reverse</button>
+                            </div>
+                        </div>
+            
+                        <div class="control-group">
+                            <label><span>flex-wrap</span><span class="value-display" id="valFlexWrap">nowrap</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-flex-wrap="nowrap">nowrap</button>
+                                <button class="preset-btn" data-flex-wrap="wrap">wrap</button>
+                                <button class="preset-btn" data-flex-wrap="wrap-reverse">wrap-reverse</button>
+                            </div>
+                        </div>
+            
+                        <div class="control-group">
+                            <label><span>justify-content</span><span class="value-display" id="valFlexJustify">flex-start</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-flex-justify="flex-start">flex-start</button>
+                                <button class="preset-btn" data-flex-justify="center">center</button>
+                                <button class="preset-btn" data-flex-justify="flex-end">flex-end</button>
+                                <button class="preset-btn" data-flex-justify="space-between">space-between</button>
+                                <button class="preset-btn" data-flex-justify="space-around">space-around</button>
+                            </div>
+                        </div>
+            
+                        <div class="control-group" id="groupAlignItems">
+                            <label><span>align-items</span><span class="value-display" id="valFlexAlign">center</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn" data-flex-align="stretch">stretch</button>
+                                <button class="preset-btn" data-flex-align="flex-start">flex-start</button>
+                                <button class="preset-btn active" data-flex-align="center">center</button>
+                                <button class="preset-btn" data-flex-align="flex-end">flex-end</button>
+                            </div>
+                        </div>
+            
+                        <div class="control-group" id="groupAlignContent" style="display: none;">
+                            <label><span>align-content</span><span class="value-display" id="valFlexAlignContent">flex-start</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-flex-align-content="flex-start">flex-start</button>
+                                <button class="preset-btn" data-flex-align-content="center">center</button>
+                                <button class="preset-btn" data-flex-align-content="flex-end">flex-end</button>
+                                <button class="preset-btn" data-flex-align-content="space-between">space-between</button>
+                                <button class="preset-btn" data-flex-align-content="space-around">space-around</button>
+                                <button class="preset-btn" data-flex-align-content="stretch">stretch</button>
+                            </div>
+                        </div>
+            
+                        <div class="control-group">
+                            <label><span>gap</span><span class="value-display" id="valFlexGap">20px</span></label>
+                            <input type="range" id="sliderFlexGap" min="0" max="60" value="20">
+                        </div>
+
+                        <!-- 新增：flex 子项总开关 -->
+                        <div class="toggle-row" style="margin-top: 24px; border-top: 1px solid var(--bg-tertiary); padding-top: 16px;">
+                            <span style="font-weight: 600; color: var(--accent-cyan);">启用 Flex 子项分配</span>
+                            <button class="toggle-switch" id="toggleFlexItems"></button>
+                        </div>
+            
+                        <div id="flexItemsControlsList" style="display: none;">
+                            <!-- 动态生成的子项控制滑块 -->
+                        </div>
+                    </div>
+            
+                    <!-- 遮罩提示 -->
+                    <div id="flexDisabledOverlay" style="display: none; text-align: center; padding: 40px; color: var(--text-muted);">
+                        ⚠️ 当前处于普通块级流模式，请先切换 display 为 flex 以设置弹性盒子属性。
+                    </div>
+                </div>
+            </div>
+        
+            <!-- 触发弹窗的按钮 -->
+            <div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+                <button class="btn btn-primary btn-lg" id="openFlexCasesBtn">📚 查看常见的 Flexbox 布局案例</button>
+            </div>
+        </section>
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+
+    </main>
+</div>
+
+<!-- 弹窗结构保持原样 -->
+<div class="flex-cases-modal" id="flexCasesModal">
+    <div class="flex-modal-content">
+        <div class="flex-modal-header">
+            <h3>常见的 Flexbox 布局案例</h3>
+            <button class="flex-modal-close" id="closeFlexCasesBtn">✕</button>
+        </div>
+        
+        <div class="flex-modal-body">
+            <div class="flex-cases-grid">
+                <!-- 案例1：水平垂直居中 -->
+                <div class="case-card">
+                    <div class="case-title">1. 水平垂直居中</div>
+                    <div class="case-demo-box case-center">
+                        <div class="case-item">Center</div>
+                    </div>
+                    <div class="code-output">
+                        <span class="code-line"><span class="sel">.container</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">display</span>: flex;</span>
+                        <span class="code-line">  <span class="prop">justify-content</span>: center;</span>
+                        <span class="code-line">  <span class="prop">align-items</span>: center;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <!-- 案例2：两端对齐导航 -->
+                <div class="case-card">
+                    <div class="case-title">2. 两端对齐（导航栏）</div>
+                    <div class="case-demo-box case-nav">
+                        <div class="case-item">Logo</div>
+                        <div class="case-item">Menu 1</div>
+                        <div class="case-item">Menu 2</div>
+                    </div>
+                    <div class="code-output">
+                        <span class="code-line"><span class="sel">.nav</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">display</span>: flex;</span>
+                        <span class="code-line">  <span class="prop">justify-content</span>: space-between;</span>
+                        <span class="code-line">  <span class="prop">align-items</span>: center;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <!-- 案例3：侧边栏固定 + 内容自适应 -->
+                <div class="case-card">
+                    <div class="case-title">3. 侧边栏固定 + 内容自适应</div>
+                    <div class="case-demo-box case-sidebar">
+                        <div class="case-item sidebar">Sidebar</div>
+                        <div class="case-item content">Content (flex: 1)</div>
+                    </div>
+                    <div class="code-output">
+                        <span class="code-line"><span class="sel">.container</span> <span class="brace">{</span> <span class="prop">display</span>: flex; <span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.sidebar</span> <span class="brace">{</span> <span class="prop">width</span>: 80px; <span class="prop">flex-shrink</span>: 0; <span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.content</span> <span class="brace">{</span> <span class="prop">flex</span>: 1; <span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <!-- 案例4：等分布局 -->
+                <div class="case-card">
+                    <div class="case-title">4. 等分卡片布局</div>
+                    <div class="case-demo-box case-equal">
+                        <div class="case-item">Item 1</div>
+                        <div class="case-item">Item 2</div>
+                        <div class="case-item">Item 3</div>
+                    </div>
+                    <div class="code-output">
+                        <span class="code-line"><span class="sel">.container</span> <span class="brace">{</span> <span class="prop">display</span>: flex; <span class="prop">gap</span>: 10px; <span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.item</span> <span class="brace">{</span> <span class="prop">flex</span>: 1; <span class="brace">}</span></span>
+                    </div>
+                </div>
+
+                <!-- 案例5：多行换行均分 -->
+                <div class="case-card">
+                    <div class="case-title">5. 多行换行 (Flex Wrap)</div>
+                    <div class="case-demo-box case-wrap">
+                        <div class="case-item">1</div>
+                        <div class="case-item">2</div>
+                        <div class="case-item">3</div>
+                        <div class="case-item">4</div>
+                        <div class="case-item">5</div>
+                        <div class="case-item">6</div>
+                    </div>
+                    <div class="code-output">
+                        <span class="code-line"><span class="sel">.container</span> <span class="brace">{</span></span>
+                        <span class="code-line">  <span class="prop">display</span>: flex;</span>
+                        <span class="code-line">  <span class="prop">flex-wrap</span>: wrap;</span>
+                        <span class="code-line">  <span class="prop">gap</span>: 10px;</span>
+                        <span class="code-line"><span class="brace">}</span></span>
+                        <span class="code-line"><span class="sel">.item</span> <span class="brace">{</span> <span class="prop">width</span>: calc(33.33% - 10px); <span class="brace">}</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initFlexboxModule } from '../js/modules/flexbox.js';
+    initFlexboxModule();
+</script>
+
+</body>
+</html>

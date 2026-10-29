@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表标签与样式 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/list.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span>
+        CSS 原理工坊
+        <span class="logo-sub">列表标签与样式</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <!-- ========== 侧边栏 ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-section-title">列表标签与样式</div>
+        <button class="sidebar-nav-item active" data-section="ul">
+            <span class="nav-icon">📌</span><span class="nav-label">1. 无序列表</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="ol">
+            <span class="nav-icon">🔢</span><span class="nav-label">2. 有序列表</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="dl">
+            <span class="nav-icon">📖</span><span class="nav-label">3. 定义列表</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="nest">
+            <span class="nav-icon">🧩</span><span class="nav-label">4. 列表嵌套拼图</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="style">
+            <span class="nav-icon">🎨</span><span class="nav-label">5. CSS 列表样式</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item">
+            <span class="nav-icon">📦</span><span class="nav-label">盒子模型</span>
+        </a>
+        <a href="float.html" class="sidebar-nav-item">
+            <span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span>
+        </a>
+        <a href="flexbox.html" class="sidebar-nav-item">
+            <span class="nav-icon">📐</span><span class="nav-label">Flexbox</span>
+        </a>
+    </aside>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main-content">
+        
+        <!-- 板块 1：无序列表 -->
+        <section class="section-panel active" id="section-ul">
+            <div class="concept-card">
+                <h2>1. 无序列表 (Unordered List)</h2>
+                <p>无序列表是网页中最常用的列表，各个列表项之间为并列关系，没有顺序级别之分。</p>
+            </div>
+            
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">可视化区域</div>
+                    <div class="stage" style="display: flex; justify-content: center; min-height: 200px;">
+                        <ul id="ulPreview" class="list-preview">
+                            <li>HTML 基础</li>
+                            <li>CSS 样式</li>
+                            <li>JavaScript 交互</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="ulLiveCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>属性与交互</h3>
+                    
+                    <div class="control-group">
+                        <label><span>type（不推荐使用）</span><span class="value-display" id="valUlType">disc</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-ul-type="disc">disc</button>
+                            <button class="preset-btn" data-ul-type="circle">circle</button>
+                            <button class="preset-btn" data-ul-type="square">square</button>
+                            <button class="preset-btn" data-ul-type="none">none</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="margin-top: 24px;">
+                        <label><span>嵌套规则验证</span></label>
+                        <div class="rule-buttons" style="display: flex; gap: 8px; flex-direction: column;">
+                            <button class="btn btn-secondary" data-rule-test="error" style="width: 100%;">❌ 测试错误写法</button>
+                            <button class="btn btn-primary" data-rule-test="correct" style="width: 100%;">✅ 测试正确写法</button>
+                        </div>
+                        <div class="rule-demo-stage" id="ruleDemoStage" style="margin-top: 8px; min-height: 80px; font-size: 12px;">
+                            <div class="rule-code" style="color: var(--text-muted);">点击上方按钮测试嵌套规则</div>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="margin-top: 24px;">
+                        <label><span>Emmet 快捷生成</span></label>
+                        <input type="text" id="emmetInputUl" class="text-input" placeholder="输入 ul>li*3 并按回车">
+                        <button class="btn btn-primary" id="emmetRunBtnUl" style="width: 100%; margin-top: 8px;">运行</button>
+                        <div class="emmet-anim-stage" id="emmetAnimStageUl" style="margin-top: 8px; min-height: 100px;">
+                            <!-- 动画演示区 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 板块 2：有序列表 -->
+        <section class="section-panel" id="section-ol">
+            <div class="concept-card">
+                <h2>2. 有序列表 (Ordered List)</h2>
+                <p>有序列表即为有排列顺序的列表，其各个列表项会按照一定的顺序排列。</p>
+            </div>
+            
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">可视化区域</div>
+                    <div class="stage" style="display: flex; justify-content: center; min-height: 200px;">
+                        <ol id="olPreview" class="list-preview">
+                            <li>第一步：新建文件</li>
+                            <li>第二步：编写代码</li>
+                            <li>第三步：运行测试</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="olLiveCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>属性与交互</h3>
+                    <div class="control-group">
+                        <label><span>type</span><span class="value-display" id="valOlType">1</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-ol-type="1">1</button>
+                            <button class="preset-btn" data-ol-type="A">A</button>
+                            <button class="preset-btn" data-ol-type="a">a</button>
+                            <button class="preset-btn" data-ol-type="I">I</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label><span>start（起始值）</span><span class="value-display" id="valOlStart">1</span></label>
+                        <input type="range" id="sliderOlStart" min="1" max="20" value="1">
+                    </div>
+                    <div class="control-group" style="margin-top: 16px;">
+                        <div class="toggle-row" style="border: none; padding-top: 0;">
+                            <span>第 2 项使用 value="10"</span>
+                            <button class="toggle-switch" id="toggleOlValue"></button>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="margin-top: 24px;">
+                        <label><span>Emmet 快捷生成</span></label>
+                        <input type="text" id="emmetInputOl" class="text-input" placeholder="输入 ol>li*3 并按回车">
+                        <button class="btn btn-primary" id="emmetRunBtnOl" style="width: 100%; margin-top: 8px;">运行</button>
+                        <div class="emmet-anim-stage" id="emmetAnimStageOl" style="margin-top: 8px; min-height: 100px;">
+                            <!-- 动画演示区 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 板块 3：定义列表 -->
+        <section class="section-panel" id="section-dl">
+            <div class="concept-card">
+                <h2>3. 定义列表 (Definition List)</h2>
+                <p>常用于对术语或名词进行解释和描述，无项目符号。</p>
+            </div>
+            
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">可视化区域</div>
+                    <div class="stage" style="align-items: center; justify-content: center; min-height: 250px;">
+                        <dl class="dl-demo" id="dlDemo"></dl>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML + CSS 代码</div>
+                        <div class="code-output" id="dlLiveCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>图文混排交互</h3>
+                    <div class="control-group" style="margin-top: 12px;">
+                        <label><span>切换案例</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-dl-mode="text">人物介绍卡片</button>
+                            <button class="preset-btn" data-dl-mode="qr">二维码上下排版</button>
+                        </div>
+                    </div>
+                    <div class="hint-box" style="margin-top: 16px;">
+                        <strong>💡 原理：</strong>如果不使用 CSS，<code>&lt;dt&gt;</code> 和 <code>&lt;dd&gt;</code> 默认是块级元素，会上下排列。想要图文在同一行，必须给 <code>&lt;dl&gt;</code> 设置 <code>display: flex;</code>。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 板块 4：列表嵌套 -->
+        <section class="section-panel" id="section-nest">
+            <div class="concept-card">
+                <h2>4. 列表嵌套交互</h2>
+                <p>将右侧的卡片拖拽到“拼装区”，点击确定后，左侧将生成标准的嵌套列表代码与视图。</p>
+            </div>
+            
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">可视化渲染结果（点击确定后生成）</div>
+                    <div class="stage" style="display: flex; flex-direction: column; min-height: 300px; padding: 20px;">
+                        <div id="nestRenderArea" style="width: 100%; text-align: center; color: var(--text-muted);">
+                            尚未生成嵌套列表，请从右侧拖拽拼装并点击确定。
+                        </div>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时嵌套代码</div>
+                        <div class="code-output" id="nestLiveCode"><pre><span style="color:var(--text-muted);">// 等待生成...</span></pre></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>拼图拼装区</h3>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">拖拽下方卡片到虚线框：</p>
+                    
+                    <div class="nest-builder-zone" id="nestBuilderZone">
+                        <div style="color: var(--text-muted); text-align: center; font-size: 12px; padding: 20px;" id="nestBuilderHint">
+                            将“外层列表”拖入此处
+                        </div>
+                        <div id="nestBuilderList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                    </div>
+
+                    <button class="btn btn-primary" id="btnRenderNest" style="width: 100%; margin-top: 12px;" disabled>确定并生成</button>
+                    <button class="btn btn-secondary" id="resetNestBtn" style="width: 100%; margin-top: 8px;">重置</button>
+
+                    <h3 style="margin-top: 24px;">可拖拽的拼图</h3>
+                    <div class="puzzle-draggable" draggable="true" data-piece="ul-root" id="pieceUlRoot">
+                        📌 无序列表 (作为外层)
+                    </div>
+                    <div class="puzzle-draggable" draggable="true" data-piece="ol-root" id="pieceOlRoot">
+                        🔢 有序列表 (作为外层)
+                    </div>
+                    <div class="puzzle-draggable" draggable="true" data-piece="ul-child" id="pieceUlChild">
+                        ↳ 无序列表 (作为子层)
+                    </div>
+                    <div class="puzzle-draggable" draggable="true" data-piece="ol-child" id="pieceOlChild">
+                        ↳ 有序列表 (作为子层)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 板块 5：CSS 列表样式与模拟渲染 -->
+        <section class="section-panel" id="section-style">
+            <div class="concept-card">
+                <h2>5. CSS 列表样式与图像替换模拟</h2>
+                <p>按照步骤体验。特别注意：当我们用“图片”替换符号时，为何强烈推荐使用背景图而不是 list-style-image。</p>
+            </div>
+            
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">模拟浏览器渲染结果</div>
+                    <div class="stage" style="align-items: flex-start; justify-content: center; padding-top: 40px;">
+                        <div class="list-mock-browser" id="listMockBrowser">
+                            <ul class="list-style-demo" id="listStyleDemo">
+                                <!-- 结构保持纯净，具体渲染由 JS 控制内部 HTML -->
+                                <li class="list-item-box"><span class="item-text">列表项一：内容文本</span></li>
+                                <li class="list-item-box"><span class="item-text">列表项二：观察符号变化与缩进</span></li>
+                                <li class="list-item-box"><span class="item-text">列表项三：背景图片替换演示</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 CSS 代码</div>
+                        <div class="code-output" id="styleLiveCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>操作步骤</h3>
+                    
+                    <!-- 步骤 1 -->
+                    <div class="control-group step-group" id="step1">
+                        <label><span>1. list-style-type</span></label>
+                        <select id="selectListType" class="mini-select" style="width: 100%; padding: 10px;">
+                            <optgroup label="无序列表符号">
+                                <option value="disc" selected>disc（● 实心圆）</option>
+                                <option value="circle">circle（○ 空心圆）</option>
+                                <option value="square">square（■ 实心方块）</option>
+                                <option value="none">none（无符号）</option>
+                            </optgroup>
+                            <optgroup label="有序列表符号">
+                                <option value="decimal">decimal（1, 2, 3）</option>
+                                <option value="lower-alpha">lower-alpha（a, b, c）</option>
+                                <option value="lower-roman">lower-roman（i, ii, iii）</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- 步骤 2 -->
+                    <div class="control-group step-group" id="step2">
+                        <label><span>2. list-style-position</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-list-pos="outside">outside (框外)</button>
+                            <button class="preset-btn" data-list-pos="inside">inside (框内)</button>
+                        </div>
+                    </div>
+
+                    <!-- 步骤 3 -->
+                    <div class="control-group step-group" id="step3">
+                        <label><span>3. list-style-image (强烈不推荐)</span></label>
+                        <div class="toggle-row" style="border: none; padding: 0;">
+                            <span>使用大尺寸图像作为符号</span>
+                            <button class="toggle-switch" id="toggleListImage"></button>
+                        </div>
+                        <div class="hint-box" style="margin-top: 8px; font-size: 11px; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.1); color: #fca5a5;">
+                            ⚠️ 缺陷：<code>list-style-image</code> 无法限制图片大小。如果图片是 100x100，它就会原样撑破行高，且无法垂直居中。
+                        </div>
+                    </div>
+
+                    <!-- 步骤 4 -->
+                    <div class="control-group step-group" id="step4" style="border: 1px dashed var(--accent-cyan); padding: 12px; border-radius: 6px;">
+                        <label style="color: var(--accent-cyan);"><span>4. 背景图像替换 (行业推荐)</span></label>
+                        
+                        <div class="sub-step">
+                            <label><span>A. 必须清除原有符号</span></label>
+                            <button class="btn btn-secondary" id="btnClearSymbol" style="width: 100%; font-size: 12px;">点击执行 list-style: none</button>
+                        </div>
+
+                        <div class="sub-step" style="margin-top: 8px;">
+                            <label><span>B. 必须设置 padding-left</span><span class="value-display" id="valPaddingLeft">0px</span></label>
+                            <input type="range" id="sliderPaddingLeft" min="0" max="40" value="0">
+                        </div>
+
+                        <div class="sub-step" style="margin-top: 8px;">
+                            <label><span>C. 必须设置背景图</span></label>
+                            <button class="btn btn-primary" id="btnApplyBg" style="width: 100%; font-size: 12px;">应用图像背景</button>
+                        </div>
+
+                        <div class="hint-box" style="margin-top: 8px; font-size: 11px; padding: 8px; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">
+                            ⚠️ 如果跳过 A、B 直接点 C，背景图会被默认符号遮挡或无法显示。只有通过 background-size 才能完美控制大图。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+    </main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initListModule } from '../js/modules/list.js';
+    initListModule();
+</script>
+
+</body>
+</html>

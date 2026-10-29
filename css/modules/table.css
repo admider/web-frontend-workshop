@@ -1,0 +1,193 @@
+/* ================================================================
+   table.css · 表格模块专属样式
+   ================================================================ */
+
+.section-panel { display: none; animation: fadeIn 0.35s ease; }
+.section-panel.active { display: block; }
+
+/* 
+   核心修复：限制大屏的区域宽度，防止代码内容变化撑开大屏
+*/
+.stage-wrapper {
+    min-width: 0; /* 防止在 flex/grid 布局中被子元素撑开 */
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.table-merge-wrapper {
+    background: #0a0f1a;
+    padding: 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--bg-tertiary);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 250px;
+    /* 加上宽度限制，让内容在里面滚动 */
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto; 
+    position: relative;
+}
+
+/* 
+   核心修复：限制实时代码区的最大宽度，代码太长就出现横向滚动条
+   不影响外层的大屏尺寸
+*/
+.live-code-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.code-output {
+    overflow-x: auto; /* 代码太长时，在内部滚动 */
+    white-space: pre; /* 保持代码的换行格式 */
+}
+
+/* ================================================================
+   板块4：现代场景：高级表格皮肤 (4 套方案)
+   ================================================================ */
+
+.case-table {
+    width: 100%;
+    border-collapse: separate;
+    text-align: left;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.case-table th, 
+.case-table td {
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+}
+
+.case-table td {
+    color: #e2e8f0;
+}
+
+/* --- 1. Ant Design 风格 --- */
+/* 浅灰色表头，浅色斑马线，浅灰色横线 */
+.style-antd .case-table {
+    border-collapse: collapse;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.style-antd .case-table th {
+    background: #0f172a;
+    color: #94a3b8;
+    font-weight: 500;
+    border-bottom: 1px solid #334155;
+}
+.style-antd .case-table td {
+    border-bottom: 1px solid #334155;
+}
+.style-antd .case-table tbody tr:nth-child(even) {
+    background-color: #182234;
+}
+.style-antd .case-table tbody tr:hover {
+    background-color: #243147;
+}
+
+
+/* --- 2. Tailwind UI 风格 --- */
+/* 卡片感，大圆角，上边框无，纯底部分割线 */
+.style-tailwind .case-table {
+    border-collapse: collapse;
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.style-tailwind .case-table th {
+    background: #1e293b;
+    color: #64748b;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #334155;
+}
+.style-tailwind .case-table td {
+    border-bottom: 1px solid #2d3748;
+}
+.style-tailwind .case-table tbody tr:hover {
+    background-color: #283548;
+}
+
+
+/* --- 3. GitHub 风格 --- */
+/* 表头背景色深，边框明显，数据表格感极强 */
+.style-github .case-table {
+    border-collapse: collapse;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: #0d1117;
+}
+.style-github .case-table th {
+    background: #161b22;
+    color: #c9d1d9;
+    font-weight: 600;
+    border-bottom: 1px solid #30363d;
+}
+.style-github .case-table td {
+    border-bottom: 1px solid #21262d;
+}
+.style-github .case-table tbody tr:hover {
+    background-color: #161b22;
+}
+
+
+/* --- 4. Stripe 仪表盘风格 --- */
+/* 极其清爽，无外边框，无内边框，悬浮感极强 */
+.style-stripe .case-table {
+    border-collapse: separate;
+    border-spacing: 0 8px; /* 行与行之间完全分离 */
+    background: transparent;
+}
+.style-stripe .case-table th {
+    background: transparent;
+    color: #94a3b8;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: none;
+    padding-bottom: 4px;
+}
+.style-stripe .case-table td {
+    background: #1e293b;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+.style-stripe .case-table tbody tr td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.style-stripe .case-table tbody tr td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.style-stripe .case-table tbody tr:hover td {
+    background-color: #2a3a52;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* 状态标签 Tags */
+.status-tag {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.status-tag.success { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+.status-tag.warning { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+.status-tag.danger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+/* 按钮选中态 */
+.case-style-btn.active {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border-color: var(--accent-blue) !important;
+    box-shadow: inset 0 0 0 1px var(--accent-blue);
+}

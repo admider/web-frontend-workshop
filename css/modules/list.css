@@ -1,0 +1,281 @@
+/* ================================================================
+   列表标签与样式专属 CSS (v9 彻底修复版)
+   ================================================================ */
+
+.section-panel { display: none !important; }
+.section-panel.active { display: block !important; animation: fadeIn 0.35s ease; }
+
+.sidebar-nav-item.active {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    font-weight: 600;
+}
+
+/* 基础列表样式重置 */
+.list-preview ul,
+.list-preview ol {
+    padding-left: 24px;
+    font-size: 15px;
+    line-height: 2;
+    color: var(--text-primary);
+}
+
+/* 代码框样式 */
+.live-code-wrapper {
+    background: #0a0f1a;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--bg-tertiary);
+    overflow: hidden;
+}
+.live-code-title {
+    background: rgba(255,255,255,0.05);
+    padding: 6px 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+.live-code-wrapper .code-output {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    padding: 12px;
+    font-size: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+}
+.code-output pre { margin: 0; white-space: pre-wrap; }
+.code-output .sel { color: var(--accent-cyan); }
+.code-output .prop { color: var(--accent-pink); }
+.code-output .val { color: var(--accent-orange); }
+.code-output .comment { color: var(--text-muted); }
+
+/* 侧边栏控制区域 */
+.control-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+.control-panel h3 {
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.control-panel h3::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--accent-cyan);
+    border-radius: 50%;
+}
+
+/* 交互组件样式 */
+.rule-demo-stage {
+    background: #0a0f1a;
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    border: 1px dashed var(--bg-tertiary);
+}
+.rule-code { font-family: var(--font-mono); font-size: 12px; line-height: 1.6; }
+.rule-error { border-color: #ef4444 !important; background: rgba(239, 68, 68, 0.1) !important; color: #f87171 !important; padding: 8px; border-radius: 4px; }
+.rule-correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1) !important; color: #34d399 !important; padding: 8px; border-radius: 4px; }
+
+/* Emmet 快捷输入 */
+.emmet-anim-stage {
+    background: #0a0f1a;
+    border-radius: var(--radius-md);
+    padding: 12px;
+    border: 1px solid var(--bg-tertiary);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    position: relative;
+}
+.emmet-typing { color: var(--accent-cyan); white-space: pre-wrap; }
+.emmet-enter-badge {
+    display: inline-block; background: var(--bg-tertiary); color: var(--text-primary);
+    font-size: 10px; padding: 2px 6px; border-radius: 4px;
+    border-bottom: 2px solid var(--border-color); margin-left: 6px;
+}
+.emmet-result { opacity: 0; transition: opacity 0.5s; }
+.emmet-result.show { opacity: 1; }
+
+/* 定义列表 */
+.dl-demo {
+    background: var(--bg-primary);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--bg-tertiary);
+    max-width: 450px;
+    width: 100%;
+}
+.dl-demo img { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 2px solid var(--accent-cyan); }
+
+/* 列表嵌套 */
+.nest-builder-zone {
+    border: 2px dashed var(--accent-cyan);
+    border-radius: var(--radius-md);
+    min-height: 120px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: rgba(6, 182, 212, 0.05);
+    transition: all 0.3s ease;
+}
+.nest-builder-zone.drag-over {
+    background: rgba(6, 182, 212, 0.15);
+    border-color: var(--accent-blue);
+}
+.nest-built-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-cyan);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nest-built-item .btn-remove {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+.puzzle-draggable {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: grab;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+.puzzle-draggable:hover { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.1); }
+.puzzle-draggable:active { cursor: grabbing; }
+.puzzle-draggable.disabled { opacity: 0.35; cursor: not-allowed; background: var(--bg-secondary); }
+.nest-render-ul, .nest-render-ol {
+    text-align: left;
+    line-height: 1.8;
+    color: var(--text-primary);
+    padding-left: 24px;
+}
+.nest-render-ul ul, .nest-render-ul ol,
+.nest-render-ol ul, .nest-render-ol ol {
+    padding-left: 24px;
+    margin-top: 4px;
+}
+
+/* ================================================================
+   板块 5：CSS 列表样式分步操作（纯模拟渲染）
+   ================================================================ */
+.list-mock-browser {
+    width: 100%;
+    max-width: 450px;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 30px;
+    position: relative;
+}
+
+.list-style-demo {
+    margin: 0;
+    font-size: 15px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    transition: all 0.3s ease;
+    list-style: none; /* 彻底禁用原生列表样式，全部由 JS 控制 */
+    padding-left: 20px; /* 容器默认留点空隙 */
+}
+
+.list-item-box {
+    position: relative;
+    border: 1px dashed rgba(255,255,255,0.15);
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    background: rgba(59, 130, 246, 0.05);
+    transition: all 0.3s ease;
+}
+
+.item-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* 模拟原生项目符号 (纯 CSS) */
+.mock-bullet {
+    display: inline-block;
+    margin-right: 10px;
+    color: var(--accent-cyan);
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+/* 模拟 list-style-image 的大图 */
+.mock-list-image {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-image: url("../../img/panda.png");
+    background-size: cover;
+    background-color: #ec4899; 
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 10px;
+    /* 故意让其下沉，模拟排版灾难 */
+    position: relative;
+    top: 5px; 
+}
+
+/* 模拟 background-image */
+.mock-bg-image {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url("../../img/panda.png");
+    background-size: cover;
+    background-color: #ec4899; 
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+/* A 步骤按钮的状态交互 */
+#btnClearSymbol {
+    border: 1px solid var(--bg-tertiary);
+    transition: all 0.3s ease;
+}
+#btnClearSymbol.success {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-color: var(--accent-green) !important;
+    color: var(--accent-green) !important;
+    font-weight: 700;
+}
+
+.step-group {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    margin-bottom: 12px;
+}
+.step-group label { color: var(--accent-cyan); font-weight: 600; margin-bottom: 8px; display: block; }
+.sub-step { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--bg-tertiary); }
+.sub-step label { color: var(--text-secondary); font-size: 12px; }

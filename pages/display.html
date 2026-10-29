@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display 类型 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/display.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span> CSS 原理工坊 <span class="logo-sub">元素显示类型</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <!-- ========== 侧边栏 ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-section-title">元素显示类型</div>
+        <button class="sidebar-nav-item active" data-section="main">
+            <span class="nav-icon">🔀</span><span class="nav-label">Display 属性</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item"><span class="nav-icon">📦</span><span class="nav-label">盒子模型</span></a>
+        <a href="css3.html" class="sidebar-nav-item"><span class="nav-icon">✨</span><span class="nav-label">CSS3 扩展</span></a>
+        <a href="float.html" class="sidebar-nav-item"><span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span></a>
+        <a href="flexbox.html" class="sidebar-nav-item"><span class="nav-icon">📐</span><span class="nav-label">Flexbox</span></a>
+    </aside>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main-content">
+        <section class="section-panel active" id="section-main">
+
+            <div class="concept-card">
+                <h2>8. 元素显示类型与转换</h2>
+                <p>每个元素都有 <code>display</code> 属性，默认值取决于元素类型。
+                   通过 <code>display</code> 属性可以相互转换。
+                   <strong>block 独占一行</strong>；<strong>inline 不换行但无法设置宽高</strong>；
+                   <strong>inline-block 不换行且可设宽高</strong>。</p>
+            </div>
+
+            <!-- 左大屏 + 右面板 -->
+            <div class="demo-layout">
+
+                <!-- ================= 左侧：可视化大屏 ================= -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">display 对比（三个独立元素，可分别调整）</div>
+
+                    <!-- 可视化舞台 -->
+                    <div class="stage stage-display-demo">
+                        <div class="display-demo-container" id="displayDemoContainer">
+                            <div class="display-item display-item-1" id="displayItem1">
+                                <span class="display-item-text">
+                                    div标签(<span class="display-value" id="displayTextValue1">display: block</span>)
+                                </span>
+                            </div>
+                            <div class="display-item display-item-2" id="displayItem2">
+                                <span class="display-item-text">
+                                    span标签(<span class="display-value" id="displayTextValue2">display: inline</span>)
+                                </span>
+                            </div>
+                            <div class="display-item display-item-3" id="displayItem3">
+                                <span class="display-item-text">
+                                    img标签(<span class="display-value" id="displayTextValue3">display: inline-block</span>)
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hint-box" style="margin-top: 16px;">
+                        <strong>💡 观察要点：</strong>
+                        · block 元素独占一行，宽高可自由设置；
+                        · inline 元素不换行，但宽高设置<strong>无效</strong>（滑块会变灰）；
+                        · inline-block 元素不换行，同时宽高可以设置。
+                    </div>
+
+                    <!-- 实时代码区 -->
+                    <div class="live-code-wrapper" style="margin-top: 20px;">
+                        <div class="live-code-header">
+                            <div class="live-code-tabs">
+                                <button class="live-code-tab active" data-code-tab="css">CSS</button>
+                                <button class="live-code-tab" data-code-tab="html">HTML</button>
+                            </div>
+                            <span class="live-code-tag">实时</span>
+                        </div>
+                        <div class="code-output" id="displayLiveCode"></div>
+                    </div>
+
+                    <!-- 对比表格 -->
+                    <div class="mini-table-wrapper">
+                        <table class="mini-table">
+                            <thead>
+                                <tr><th>类型</th><th>换行</th><th>宽高</th><th>边距</th><th>示例元素</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>block</td><td>是</td><td>可设</td><td>四方向</td><td><code>&lt;div&gt; &lt;p&gt; &lt;h1&gt;-&lt;h6&gt; &lt;section&gt; &lt;ul&gt; &lt;li&gt;</code></td></tr>
+                                <tr><td>inline</td><td>否</td><td>不可</td><td>仅左右</td><td><code>&lt;span&gt; &lt;a&gt; &lt;strong&gt; &lt;em&gt; &lt;label&gt;</code></td></tr>
+                                <tr><td>inline-block</td><td>否</td><td>可设</td><td>四方向</td><td><code>&lt;img&gt; &lt;input&gt; &lt;button&gt; &lt;select&gt;</code></td></tr>
+                                <tr><td>flex</td><td>取决于容器</td><td>可设</td><td>四方向</td><td>弹性容器</td></tr>
+                                <tr><td>grid</td><td>取决于容器</td><td>可设</td><td>四方向</td><td>网格容器</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ================= 右侧：控制面板 ================= -->
+                <div class="control-panel">
+                    <h3>display 设置</h3>
+
+                    <div class="display-controls-list">
+
+                        <!-- 元素 1 -->
+                        <div class="display-control-item">
+                            <div class="display-control-title">元素 1 · 模拟 &lt;div&gt;（默认 block）</div>
+                            <div class="control-group">
+                                <label><span>display</span><span class="value-display" id="valDisplay1">block</span></label>
+                                <div class="preset-btns preset-btns-wrap">
+                                    <button class="preset-btn active" data-display-target="1" data-display-value="block">block</button>
+                                    <button class="preset-btn" data-display-target="1" data-display-value="inline">inline</button>
+                                    <button class="preset-btn" data-display-target="1" data-display-value="inline-block">inline-block</button>
+                                    <button class="preset-btn" data-display-target="1" data-display-value="flex">flex</button>
+                                    <button class="preset-btn" data-display-target="1" data-display-value="grid">grid</button>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label><span>width</span><span class="value-display" id="valDisplayW1">200px</span></label>
+                                <input type="range" data-display-w="1" min="50" max="400" value="200" step="10">
+                            </div>
+                            <div class="control-group">
+                                <label><span>height</span><span class="value-display" id="valDisplayH1">60px</span></label>
+                                <input type="range" data-display-h="1" min="30" max="200" value="60" step="10">
+                            </div>
+                        </div>
+
+                        <!-- 元素 2 -->
+                        <div class="display-control-item">
+                            <div class="display-control-title">元素 2 · 模拟 &lt;span&gt;（默认 inline）</div>
+                            <div class="control-group">
+                                <label><span>display</span><span class="value-display" id="valDisplay2">inline</span></label>
+                                <div class="preset-btns preset-btns-wrap">
+                                    <button class="preset-btn" data-display-target="2" data-display-value="block">block</button>
+                                    <button class="preset-btn active" data-display-target="2" data-display-value="inline">inline</button>
+                                    <button class="preset-btn" data-display-target="2" data-display-value="inline-block">inline-block</button>
+                                    <button class="preset-btn" data-display-target="2" data-display-value="flex">flex</button>
+                                    <button class="preset-btn" data-display-target="2" data-display-value="grid">grid</button>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label><span>width</span><span class="value-display" id="valDisplayW2">不可设</span></label>
+                                <input type="range" data-display-w="2" min="50" max="400" value="100" step="10" disabled>
+                            </div>
+                            <div class="control-group">
+                                <label><span>height</span><span class="value-display" id="valDisplayH2">不可设</span></label>
+                                <input type="range" data-display-h="2" min="30" max="200" value="50" step="10" disabled>
+                            </div>
+                        </div>
+
+                        <!-- 元素 3 -->
+                        <div class="display-control-item">
+                            <div class="display-control-title">元素 3 · 模拟 &lt;img&gt;（默认 inline-block）</div>
+                            <div class="control-group">
+                                <label><span>display</span><span class="value-display" id="valDisplay3">inline-block</span></label>
+                                <div class="preset-btns preset-btns-wrap">
+                                    <button class="preset-btn" data-display-target="3" data-display-value="block">block</button>
+                                    <button class="preset-btn" data-display-target="3" data-display-value="inline">inline</button>
+                                    <button class="preset-btn active" data-display-target="3" data-display-value="inline-block">inline-block</button>
+                                    <button class="preset-btn" data-display-target="3" data-display-value="flex">flex</button>
+                                    <button class="preset-btn" data-display-target="3" data-display-value="grid">grid</button>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label><span>width</span><span class="value-display" id="valDisplayW3">100px</span></label>
+                                <input type="range" data-display-w="3" min="50" max="400" value="100" step="10">
+                            </div>
+                            <div class="control-group">
+                                <label><span>height</span><span class="value-display" id="valDisplayH3">50px</span></label>
+                                <input type="range" data-display-h="3" min="30" max="200" value="50" step="10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+    </main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initDisplayModule } from '../js/modules/display.js';
+    initDisplayModule();
+</script>
+</body>
+</html>

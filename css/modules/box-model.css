@@ -1,0 +1,1023 @@
+/* ================================================================
+   box-model.css · 盒子模型 7 个子板块的样式
+   ================================================================ */
+
+/* ================================================================
+   子板块切换
+   ================================================================ */
+.section-panel {
+    display: none;
+    animation: fadeIn 0.35s ease;
+}
+.section-panel.active { display: block; }
+
+/* ================================================================
+   统一演示场景
+   ================================================================ */
+.stage-unified {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    min-height: 480px;
+}
+
+.browser-frame {
+    width: 100%;
+    max-width: 640px;
+    background: #1a2030;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--bg-tertiary);
+}
+
+.browser-bar {
+    background: #2a3441;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #1a2030;
+}
+
+.browser-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.browser-dot.red { background: #ff5f57; }
+.browser-dot.yellow { background: #febc2e; }
+.browser-dot.green { background: #28c840; }
+
+.browser-url {
+    margin-left: 12px;
+    background: #1a2030;
+    color: var(--text-muted);
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+}
+
+.browser-viewport {
+    padding: 40px;
+    background: #0f172a;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+/* ================================================================
+   演示盒子：margin → border → padding → content
+   ================================================================ */
+.demo-box {
+    background: rgba(236, 72, 153, 0.15);
+    border: 1px dashed rgba(236, 72, 153, 0.5);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.demo-box-margin-label {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-pink);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.demo-box-border {
+    background: rgba(245, 158, 11, 0.2);
+    border: 4px solid var(--accent-orange);
+    border-radius: 6px;
+    padding: 4px;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 120px;
+    min-height: 80px;
+}
+
+.demo-box-border-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-orange);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--bg-primary);
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.demo-box-padding {
+    background: rgba(16, 185, 129, 0.2);
+    border-radius: 4px;
+    padding: 24px;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.demo-box-padding-label {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.demo-box-content {
+    background: var(--content-color);
+    border-radius: 3px;
+    padding: 16px 24px;
+    min-width: 80px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+}
+
+/* ================================================================
+   板块 2：div 对比
+   ================================================================ */
+.stage-compare {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    min-height: 400px;
+    align-items: flex-start;
+}
+.compare-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.compare-col h4 {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.layout-mock { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.mock-block {
+    background: var(--bg-tertiary);
+    border: 1px dashed var(--accent-blue);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent-cyan);
+    text-align: center;
+}
+.mock-row { display: grid; grid-template-columns: 2fr 1fr; gap: 6px; }
+.mock-article { background: rgba(59, 130, 246, 0.15); border-color: var(--accent-blue); text-align: left; }
+.mock-sidebar { background: rgba(139, 92, 246, 0.15); border-color: var(--accent-purple); color: var(--accent-purple); }
+.mock-inner {
+    display: block;
+    margin-top: 6px;
+    padding: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 4px;
+    font-size: 9px;
+}
+
+/* ================================================================
+   板块 3：边框
+   ================================================================ */
+.control-panel-wide {
+    margin-top: 0;
+    position: sticky;
+    top: 88px;
+    align-self: start;
+}
+
+.border-sub-panel { display: none; }
+.border-sub-panel.active { display: block; }
+
+.border-multi-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.border-multi-slot {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+}
+
+.border-multi-slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.border-multi-slot-header .slot-label {
+    color: var(--accent-cyan);
+}
+
+.border-multi-slot-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.border-multi-slot-controls select {
+    flex: 1;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: inherit;
+}
+
+.border-multi-slot-controls input[type="range"] { flex: 2; }
+.border-multi-slot-controls input[type="color"] {
+    width: 36px;
+    height: 28px;
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    background: none;
+    cursor: pointer;
+}
+
+.per-side-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.per-side-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.per-side-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-cyan);
+}
+
+.mini-select {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 5px 8px;
+    font-size: 11px;
+    font-family: inherit;
+}
+
+.mini-range { width: 100%; }
+.mini-color {
+    width: 100%;
+    height: 26px;
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    background: none;
+    cursor: pointer;
+}
+#borderSettingArea.is-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+    filter: grayscale(0.4);
+    position: relative;
+}
+#borderSettingArea.is-disabled::after {
+    content: 'border-style: none 时，以下设置不生效';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.6);
+    color: var(--accent-orange);
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: var(--radius-md);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* ================================================================
+   板块 4/5：padding / margin 滑块
+   ================================================================ */
+.padding-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.padding-slider-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+}
+
+.padding-slider-item label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.padding-slider-item .value-display {
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-weight: 700;
+}
+
+/* ================================================================
+   板块 5：margin 父元素 + 四方向相邻
+   ================================================================ */
+.stage-margin-demo {
+    padding: 24px;
+}
+
+.margin-parent-viewport {
+    padding: 30px 20px;
+    min-height: 420px;
+    display: block;
+    position: relative;
+}
+
+.margin-parent {
+    position: relative;
+    background: rgba(15, 23, 42, 0.5);
+    border: 2px dashed var(--accent-purple);
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-parent.no-auto {
+    align-items: flex-start;
+}
+
+.margin-parent-label {
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    background: var(--bg-primary);
+    color: var(--accent-purple);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.margin-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-parent.no-auto .margin-row {
+    justify-content: flex-start;
+}
+
+.margin-neighbor {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 8px 14px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--bg-elevated);
+    white-space: nowrap;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-parent.no-auto .margin-neighbor {
+    align-self: flex-start;
+}
+
+.neighbor-left,
+.neighbor-right {
+    writing-mode: vertical-rl;
+    padding: 14px 8px;
+}
+
+/* 粉红色 margin 层 */
+
+
+.margin-layer-label {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-pink);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 0.9;
+    z-index: 2;
+}
+
+/* ================================================================
+   margin 合并演示
+   ================================================================ */
+.stage-collapse-demo {
+    min-height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 20px;
+}
+
+.collapse-pair {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 360px;
+    gap: 0;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-item {
+    background: var(--content-color);
+    color: white;
+    padding: 16px 32px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    z-index: 2;
+    min-width: 220px;
+    text-align: center;
+    border: 2px solid var(--accent-cyan);
+    transition: margin 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-item-label {
+    font-size: 12px;
+}
+
+.collapse-item-margin {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono);
+}
+
+.collapse-gap-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(236, 72, 153, 0.15);
+    border: 1px solid var(--accent-pink);
+    border-radius: 20px;
+    padding: 3px 12px;
+    z-index: 3;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    margin: 0;
+    height: 24px;
+}
+
+.collapse-gap-indicator .gap-line {
+    width: 14px;
+    height: 1px;
+    background: var(--accent-pink);
+}
+
+.collapse-gap-indicator .gap-label {
+    font-size: 11px;
+    color: var(--accent-pink);
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+/* 环绕视口 */
+.margin-surround-viewport {
+    min-height: 460px;
+    padding: 30px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.margin-surround {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: all 0.4s ease;
+}
+
+.surround-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: all 0.4s ease;
+}
+
+.surround-neighbor {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 10px 18px;
+    font-size: 11px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--bg-elevated);
+    white-space: nowrap;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    min-width: 80px;
+}
+
+.surround-left,
+.surround-right {
+    writing-mode: vertical-rl;
+    padding: 18px 10px;
+    min-height: 80px;
+    min-width: 36px;
+}
+
+/* 盒子外层的粉色 margin 层：padding 就是视觉上的外边距宽度 */
+.margin-demo-box-outer {
+    display: inline-block;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.margin-demo-box-margin {
+    background: rgba(236, 72, 153, 0.25);
+    border: 1px dashed rgba(236, 72, 153, 0.6);
+    border-radius: 6px;
+    padding: 0;
+    position: relative;
+    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 四周邻居与盒子之间的间距，直接由邻居的 margin 实现 */
+.surround-top    { margin-bottom: 0; }
+.surround-bottom { margin-top: 0; }
+.surround-left   { margin-right: 0; }
+.surround-right  { margin-left: 0; }
+
+/* 对齐演示视口 */
+.align-viewport {
+    min-height: 360px;
+    padding: 24px;
+    display: flex;
+    position: relative;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
+    background-size: 30px 30px;
+    transition: all 0.4s ease;
+}
+
+.align-box {
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+    transition: margin 0.4s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    flex-shrink: 0;
+}
+
+.align-box-content {
+    pointer-events: none;
+}
+
+/* ================================================================
+   板块 6：宽高演示
+   ================================================================ */
+.size-viewport {
+    min-height: 460px;
+    padding: 50px 40px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+/* 粉色虚线框：模拟 margin 区域 */
+.size-margin-layer {
+    position: relative;
+    background: rgba(236, 72, 153, 0.12);
+    border: 1px dashed rgba(236, 72, 153, 0.6);
+    border-radius: 8px;
+    padding: 0;  /* 由 JS 动态设置为 margin 值 */
+    transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.size-margin-label {
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-pink);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 0.9;
+}
+
+.size-demo-box {
+    box-sizing: content-box;
+    width: 200px;
+    height: 100px;
+    padding: 20px;
+    border: 5px solid var(--accent-orange);
+    background: rgba(16, 185, 129, 0.2);
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    margin: 0;  /* 外边距由外层 .size-margin-layer 的 padding 表现 */
+}
+
+.size-demo-box::before {
+    content: 'border + padding';
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-orange);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--bg-primary);
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.size-demo-box .demo-box-content,
+#sizeDemoContent {
+    background: var(--content-color);
+    border-radius: 3px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 11px;
+    text-align: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* 计算面板总宽高行高亮 */
+.calc-row-total {
+    border-top: 1px dashed var(--bg-tertiary);
+    margin-top: 6px;
+    padding-top: 8px;
+}
+
+/* ================================================================
+   板块 7：背景演示
+   ================================================================ */
+.stage-scrollable {
+    padding: 0;
+    min-height: auto;
+}
+
+.scroll-viewport {
+    height: 520px;
+    overflow-y: auto;
+    padding: 30px 40px;
+    display: block;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-tertiary) transparent;
+    position: relative;
+}
+
+.scroll-viewport::-webkit-scrollbar { width: 8px; }
+.scroll-viewport::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 4px; }
+
+.bg-scroll-content {
+    min-height: 950px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+}
+
+.bg-demo-box {
+    position: relative;
+    padding: 20px;
+    background: rgba(236, 72, 153, 0.1);
+    border: 1px dashed rgba(236, 72, 153, 0.5);
+    border-radius: 8px;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.bg-demo-box::before {
+    content: 'margin';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-pink);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.bg-demo-border {
+    background: rgba(245, 158, 11, 0.35);
+    border: 4px solid var(--accent-orange);
+    padding: 4px;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 4px;
+}
+
+.bg-demo-border::before {
+    content: 'border（不覆盖）';
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-orange);
+    letter-spacing: 0.5px;
+    background: var(--bg-primary);
+    padding: 1px 6px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 5;
+}
+
+.bg-demo-padding {
+    background-color: #1e3a5f;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: auto;
+    background-attachment: scroll;
+    background-origin: padding-box;
+    background-clip: padding-box;
+
+    padding: 12px;
+    position: relative;
+    min-width: 400px;
+    min-height: 260px;
+    border-radius: 3px;
+    transition: background 0.4s ease;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    overflow: hidden;
+}
+
+.bg-demo-padding::before {
+    content: 'padding';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-green);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 4;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1px 6px;
+    border-radius: 3px;
+}
+
+.bg-fixed-image-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: auto;
+    background-color: transparent;
+    border-radius: 3px;
+    z-index: 1;
+}
+
+.bg-fixed-image-layer.active {
+    opacity: 1;
+}
+
+.bg-demo-content {
+    flex: 1;
+    background: rgba(30, 58, 95, 0.4);
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 20px;
+    border-radius: 3px;
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    position: relative;
+    z-index: 3;
+    transition: all 0.4s ease;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-demo-content::before {
+    content: 'content';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.bg-scroll-spacer {
+    padding: 80px 20px;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+}
+
+.text-input {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--bg-primary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    transition: all var(--transition-base);
+    margin-top: 6px;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+}
+
+.text-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ================================================================
+   通用小组件
+   ================================================================ */
+.preset-btns-wrap {
+    flex-wrap: wrap;
+}
+
+.color-swatches {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.color-swatch:hover { transform: scale(1.08); }
+.color-swatch.active {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-cyan);
+}
+
+.mini-table-wrapper {
+    margin-top: 12px;
+    overflow-x: auto;
+}
+
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 12px;
+}
+
+.mini-table td,
+.mini-table th {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--bg-tertiary);
+    text-align: left;
+    color: var(--text-secondary);
+}
+
+.mini-table th {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mini-table code {
+    font-size: 10px;
+    padding: 1px 4px;
+}
+
+/* ================================================================
+   响应式
+   ================================================================ */
+@media (max-width: 1024px) {
+    .stage-compare { flex-direction: column; }
+    .per-side-grid { grid-template-columns: 1fr; }
+    .margin-parent-viewport { padding: 20px 10px; }
+    .control-panel-wide { position: static; }
+}
+
+@media (max-width: 640px) {
+    .browser-viewport { padding: 20px; }
+    .demo-box { padding: 14px; }
+    .demo-box-padding { padding: 14px; }
+    .margin-row { flex-direction: column; gap: 8px; }
+    .neighbor-left, .neighbor-right { writing-mode: horizontal-tb; }
+}

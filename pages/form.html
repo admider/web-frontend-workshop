@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表单 Form · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/form.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span> CSS 原理工坊 <span class="logo-sub">表单 Form</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <!-- ========== 侧边栏 ========== -->
+    <aside class="sidebar">
+        <div class="sidebar-section-title">表单 Form</div>
+        <button class="sidebar-nav-item active" data-section="basic">
+            <span class="nav-icon">🏗️</span><span class="nav-label">1. 基础与容器</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="inputs">
+            <span class="nav-icon">⌨️</span><span class="nav-label">2. input 全量字典</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="others">
+            <span class="nav-icon">🔽</span><span class="nav-label">3. 其他控件与按钮</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="beautify">
+            <span class="nav-icon">🪄</span><span class="nav-label">4. CSS 美化高级沙盒</span>
+        </button>
+        <button class="sidebar-nav-item" data-section="cases">
+            <span class="nav-icon">✨</span><span class="nav-label">5. 现代高级案例库</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item"><span class="nav-icon">📦</span><span class="nav-label">盒子模型</span></a>
+        <a href="table.html" class="sidebar-nav-item"><span class="nav-icon">📊</span><span class="nav-label">表格 Table</span></a>
+    </aside>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main-content">
+        
+        <!-- ============================================================
+             板块 1：基础与容器
+             ============================================================ -->
+        <section class="section-panel active" id="section-basic">
+            <div class="concept-card">
+                <h2>1. 表单基础与容器</h2>
+                <p><code>&lt;form&gt;</code> 是包裹控件的盒子。点击提交后，通过设置它的 <code>action</code>、<code>name</code> 和 <code>method</code>，浏览器会将内部数据打包发送。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">表单盒子容器与提交流程模拟</div>
+                    <div class="stage" style="display: flex; justify-content: center; align-items: center; min-height: 400px; position: relative; overflow: hidden;">
+                        
+                        <div class="form-box-mock" id="formBoxMock">
+                            <span class="form-box-label">&lt;form&gt; 盒子容器</span>
+                            
+                            <div class="form-demo-inner" style="position: relative; z-index: 2; width: 100%; max-width: 280px;">
+                                <h3 style="text-align: center; color: var(--text-primary); margin-bottom: 20px; font-size: 16px;">用户注册</h3>
+                                <div class="form-group">
+                                    <label>用户名：</label>
+                                    <input type="text" name="username" placeholder="请输入用户名">
+                                </div>
+                                <div class="form-group">
+                                    <label>密码：</label>
+                                    <input type="password" name="password" placeholder="请输入密码">
+                                </div>
+                                <button class="form-btn" id="btnMockSubmit">提交注册</button>
+                            </div>
+                        </div>
+
+                        <div class="submit-anim-layer" id="submitAnimLayer">
+                            <div class="anim-data-packet" id="animDataPacket">表单数据</div>
+                            <div class="anim-server" id="animServer">
+                                <span>服务器</span>
+                                <div class="anim-server-target" id="animServerTarget">url 地址</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="basicCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>表单容器三属性</h3>
+                    <div class="control-group">
+                        <label><span>action (提交地址)</span></label>
+                        <input type="text" id="inputAction" class="text-input" value="/submit.php" placeholder="接收数据的服务器地址">
+                    </div>
+                    <div class="control-group">
+                        <label><span>name (表单名称)</span></label>
+                        <input type="text" id="inputName" class="text-input" value="myForm" placeholder="区分页面中的多个表单">
+                    </div>
+                    <div class="control-group">
+                        <label><span>method (提交方式)</span><span class="value-display" id="valMethod">GET</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-method="GET">GET</button>
+                            <button class="preset-btn" data-method="POST">POST</button>
+                        </div>
+                    </div>
+                    <div class="hint-box" style="margin-top: 16px;" id="submitResultHint">
+                        <strong>💡 原理说明：</strong><br>
+                        GET 将数据拼接在 URL 后面，所有人可见（适合搜索）。<br>
+                        POST 将数据打包在请求体中，不可见（适合密码）。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 2：input 控件全量字典
+             ============================================================ -->
+        <section class="section-panel" id="section-inputs">
+            <div class="concept-card">
+                <h2>2. input 控件全量字典</h2>
+                <p>通过改变 <code>type</code> 属性，input 能化身为数十种功能。利用 <code>name</code> 分组可以实现单选和多选的互斥。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">控件实时交互</div>
+                    <div class="stage" style="display: flex; justify-content: center; align-items: center; min-height: 380px;">
+                        <div class="form-demo-box" id="inputDemoBox" style="width: 100%; max-width: 400px;">
+                            <!-- 动态渲染 -->
+                        </div>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="inputCode"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧控制面板 -->
+                <div class="control-panel" style="overflow-y: auto; max-height: 85vh;">
+                    <h3>input 控制台</h3>
+                    
+                    <!-- 1. Type 选择 -->
+                    <div class="control-group">
+                        <label><span>type (控件类型)</span></label>
+                        <select id="selectInputType" class="mini-select" style="width: 100%; padding: 8px;">
+                            <optgroup label="文本类">
+                                <option value="text">text (单行文本)</option>
+                                <option value="password">password (密码)</option>
+                                <option value="email">email (邮箱)</option>
+                                <option value="number">number (数字)</option>
+                                <option value="tel">tel (电话)</option>
+                                <option value="url">url (网址)</option>
+                                <option value="search">search (搜索)</option>
+                            </optgroup>
+                            <optgroup label="日期时间类">
+                                <option value="date">date (日期)</option>
+                                <option value="time">time (时间)</option>
+                                <option value="datetime-local">datetime-local (日期时间)</option>
+                                <option value="month">month (月份)</option>
+                                <option value="week">week (周)</option>
+                            </optgroup>
+                            <optgroup label="选择类">
+                                <option value="checkbox">checkbox (复选框)</option>
+                                <option value="radio">radio (单选框)</option>
+                                <option value="range">range (滑块)</option>
+                                <option value="color">color (颜色)</option>
+                                <option value="file">file (文件)</option>
+                            </optgroup>
+                            <optgroup label="按钮类">
+                                <option value="submit">submit (提交)</option>
+                                <option value="reset">reset (重置)</option>
+                                <option value="button">button (普通按钮)</option>
+                                <option value="image">image (图片按钮)</option>
+                            </optgroup>
+                            <optgroup label="其他">
+                                <option value="hidden">hidden (隐藏域)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- 2. 快递盒动画演示区 (仅文本类控件显示) -->
+                    <div id="packagingDemoContainer" style="display: none; margin-bottom: 24px;">
+                        <div class="hint-box" style="margin-bottom: 12px; font-size: 12px; background: rgba(6, 182, 212, 0.05); border-left-color: var(--accent-cyan);">
+                            <strong style="color: var(--accent-cyan);">💡 核心概念：</strong><br>
+                            <code>name</code> 是“收件人”，用于服务器识别数据的归属；<br>
+                            <code>value</code> 是“包裹里的物品”，也就是实际提交的数据值。
+                        </div>
+                        
+                        <div class="packaging-area" id="packagingArea">
+                            <div class="express-box">
+                                <div class="express-label" id="expressNameLabel">userInput</div>
+                                <div class="express-item" id="expressValueItem">输入内容</div>
+                            </div>
+                            <div class="packaging-controls">
+                                <div class="control-group">
+                                    <label style="font-size: 11px;">修改 name</label>
+                                    <input type="text" id="packNameInput" class="text-input" style="padding: 6px; font-size: 12px;" value="userInput" placeholder="输入 name...">
+                                </div>
+                                <div class="control-group">
+                                    <label style="font-size: 11px;">修改 value</label>
+                                    <input type="text" id="packValueInput" class="text-input" style="padding: 6px; font-size: 12px;" value="输入内容" placeholder="输入 value...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. 动态属性面板 -->
+                    <div id="dynamicInputProps" style="margin-top: 16px;"></div>
+                </div>
+				
+			</div>
+        </section>
+
+        <!-- ============================================================
+             板块 3：其他控件与按钮
+             ============================================================ -->
+        <section class="section-panel" id="section-others">
+            <div class="concept-card">
+                <h2>3. 非 input 控件与按钮</h2>
+                <p>处理长文本用 <code>&lt;textarea&gt;</code>，下拉选择用 <code>&lt;select&gt;</code>。现代开发更推荐使用 <code>&lt;button&gt;</code>。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper" style="min-width: 0;">
+                    <div class="stage-label">其他控件演示</div>
+                    <div class="stage" style="display: flex; justify-content: center; align-items: center; min-height: 400px; padding: 30px;">
+                        <div class="form-demo-box" id="otherDemoBox" style="width: 100%; max-width: 480px;">
+                            <!-- 动态渲染 -->
+                        </div>
+                    </div>
+                    
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 HTML 代码</div>
+                        <div class="code-output" id="otherCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel" style="overflow-y: auto; max-height: 85vh;">
+                    <h3>控件类型切换</h3>
+                    <div class="control-group">
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-other-type="button">button 按钮</button>
+                            <button class="preset-btn" data-other-type="select">select 下拉</button>
+                            <button class="preset-btn" data-other-type="textarea">textarea 文本域</button>
+                        </div>
+                    </div>
+                    <div id="selectProps" style="display: none; margin-top: 16px;">
+                        <div class="toggle-row">
+                            <span>multiple (允许多选)</span>
+                            <button class="toggle-switch" id="toggleSelectMultiple"></button>
+                        </div>
+                        <div class="control-group">
+                            <label><span>size (可见行数)</span><span class="value-display" id="valSelectSize">1</span></label>
+                            <input type="range" id="sliderSelectSize" min="1" max="5" value="1">
+                        </div>
+                    </div>
+                    <div id="textareaProps" style="display: none; margin-top: 16px;">
+                        <div class="control-group">
+                            <label><span>rows 行数</span><span class="value-display" id="valTaRows">4</span></label>
+                            <input type="range" id="sliderTaRows" min="2" max="10" value="4">
+                        </div>
+                        <div class="control-group">
+                            <label><span>resize 控制 (CSS)</span></label>
+                            <select id="selectTaResize" class="mini-select" style="width: 100%; padding: 6px;">
+                                <option value="vertical">vertical (垂直)</option>
+                                <option value="both">both (双向)</option>
+                                <option value="none">none (禁止)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="buttonProps" style="margin-top: 16px;">
+                        <div class="control-group">
+                            <label><span>type (按钮行为)</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-btn-type="submit">submit</button>
+                                <button class="preset-btn" data-btn-type="reset">reset</button>
+                                <button class="preset-btn" data-btn-type="button">button</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>name (控件名称)</span></label>
+                            <input type="text" id="inputBtnName" class="text-input" value="submitBtn">
+                        </div>
+                        <div class="control-group">
+                            <label><span>value (按钮文字)</span></label>
+                            <input type="text" id="inputBtnText" class="text-input" value="提交表单">
+                        </div>
+                        <div class="control-group" style="margin-top: 16px; border-top: 1px dashed var(--bg-tertiary); padding-top: 16px;">
+                            <label><span>form (绑定表单)</span></label>
+                            <select id="selectBtnForm" class="mini-select" style="width:100%; padding:6px;">
+                                <option value="">不绑定 (按钮在表单内)</option>
+                                <option value="myForm">form="myForm" (按钮跑到表单外)</option>
+                            </select>
+                        </div>
+                        <div class="toggle-row" style="margin-top: 16px;">
+                            <span>disabled (禁用)</span>
+                            <button class="toggle-switch" id="toggleBtnDisabled"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+        <!-- ============================================================
+             板块 4：CSS 美化高级沙盒
+             ============================================================ -->
+        <section class="section-panel" id="section-beautify">
+            <div class="concept-card">
+                <h2>4. CSS 美化高级沙盒</h2>
+                <p>遵循标准工程化开发：HTML 和 CSS 彻底分离。右侧调节属性，实时代码区即刻展示对应的 CSS 选择器规则。</p>
+            </div>
+
+            <div class="demo-layout">
+                <!-- 左侧大屏 -->
+                <div class="stage-wrapper" style="min-width: 0;">
+                    <div class="stage-label">模拟浏览器渲染区</div>
+                    <div class="stage" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 450px; background: #0a0f1a; overflow: hidden; width: 100%;">
+                        
+                        <!-- 纯净大屏 -->
+                        <div class="beautify-preview-box" id="stylePreviewArea" style="display: flex; justify-content: center; align-items: center; width: 100%; min-height: 200px;">
+                        </div>
+
+                    </div>
+                    
+                    <!-- 代码展示区 -->
+                    <div class="live-code-wrapper" style="margin-top: 16px; width: 100%; max-width: 100%; overflow: hidden;">
+                        <div class="live-code-header">
+                            <div class="live-code-tabs">
+                                <button class="live-code-tab active" data-code-tab="html">HTML</button>
+                                <button class="live-code-tab" data-code-tab="css">CSS</button>
+                            </div>
+                            <span class="live-code-tag">实时生成</span>
+                        </div>
+                        <div class="code-output" id="beautifyCode" style="max-height: 300px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧控制面板 -->
+                <div class="control-panel" style="overflow-y: auto; max-height: 85vh;">
+                    
+                    <div class="control-group">
+                        <label><span>Step 0: 选择目标控件</span></label>
+                        <div class="preset-btns preset-btns-wrap">
+                            <button class="preset-btn active" data-target="text">文本输入</button>
+                            <button class="preset-btn" data-target="radio">单选框</button>
+                            <button class="preset-btn" data-target="checkbox">复选框</button>
+                            <button class="preset-btn" data-target="button">按钮</button>
+                            <button class="preset-btn" data-target="select">下拉选择</button>
+                        </div>
+                    </div>
+
+                    <div class="step-group" id="step-1-group" style="margin-top: 24px; padding-bottom: 16px; border-bottom: 1px dashed var(--bg-tertiary);">
+                        <label style="color: var(--accent-green); font-weight: bold; margin-bottom: 12px; display: block;">
+                            <span class="step-num">1</span> Label 关联
+                        </label>
+                        <div class="control-group">
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-label-mode="none">无关联</button>
+                                <button class="preset-btn" data-label-mode="for">显示关联</button>
+                                <button class="preset-btn" data-label-mode="wrap">隐式关联</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-group" id="step-2-group" style="margin-top: 24px; opacity: 0.3; pointer-events: none;">
+                        <label style="color: var(--accent-orange); font-weight: bold; margin-bottom: 12px; display: block;">
+                            <span class="step-num">2</span> 剥离外衣
+                        </label>
+                        <div class="toggle-row" style="border: none;">
+                            <span>appearance: none</span>
+                            <button class="toggle-switch" id="toggleAppearance"></button>
+                        </div>
+                    </div>
+
+                    <div class="step-group" id="step-3-group" style="margin-top: 24px; opacity: 0.3; pointer-events: none; border-bottom: 1px dashed var(--bg-tertiary); padding-bottom: 16px;">
+                        <label style="color: var(--accent-cyan); font-weight: bold; margin-bottom: 12px; display: block;">
+                            <span class="step-num">3</span> 样式控制台
+                        </label>
+                        <!-- 注意：这里彻底清空，完全交由 JS 生成 -->
+                        <div id="dynamicStyleProps" style="margin-top: 16px; display: none;"></div>
+                    </div>
+
+                    <div class="step-group" id="step-4-group" style="margin-top: 24px; opacity: 0.3; pointer-events: none;">
+                        <label style="color: var(--accent-pink); font-weight: bold; margin-bottom: 12px; display: block;">
+                            <span class="step-num">4</span> 附加交互伪类
+                        </label>
+                        <div id="pseudoSelectorsContainer" style="display: flex; flex-direction: column; gap: 6px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             板块 5：现代高级表单案例库
+             ============================================================ -->
+        <section class="section-panel" id="section-cases">
+            <div class="concept-card">
+                <h2>5. 现代高级表单案例库</h2>
+                <p>参考知名游戏官网和 SaaS 平台的 UI 设计，体验不同的视觉风格。</p>
+            </div>
+
+            <div class="demo-layout">
+                <div class="stage-wrapper">
+                    <div class="stage-label">高级 UI 预览</div>
+                    <div class="stage" style="display: flex; justify-content: center; align-items: center; min-height: 450px; background-image: radial-gradient(circle at center, rgba(59,130,246,0.1) 0%, transparent 70%);">
+                        <div class="case-form-container" id="caseFormContainer"></div>
+                    </div>
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">核心 CSS 代码</div>
+                        <div class="code-output" id="caseCode"></div>
+                    </div>
+                </div>
+
+                <div class="control-panel">
+                    <h3>切换 UI 风格</h3>
+                    <div class="control-group">
+                        <div class="preset-btns preset-btns-wrap" style="flex-direction: column; gap: 10px;">
+                            <button class="preset-btn active" data-case-style="game" style="padding: 12px; text-align: left;">🎮 游戏登录界面风</button>
+                            <button class="preset-btn" data-case-style="saas" style="padding: 12px; text-align: left;">💼 现代 SaaS 极简风</button>
+                            <button class="preset-btn" data-case-style="glass" style="padding: 12px; text-align: left;">🪟 透明毛玻璃风</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+		
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+    </main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initFormModule } from '../js/modules/form.js';
+    initFormModule();
+</script>
+</body>
+</html>

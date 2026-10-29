@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS3 扩展 · CSS 原理工坊</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/modules/css3.css">
+	<!-- 引入 ECharts 图表库 -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo">
+        <span class="logo-mark">◈</span> CSS 原理工坊 <span class="logo-sub">CSS3 扩展</span>
+    </div>
+    <nav class="top-nav">
+        <a href="../index.html" class="nav-link">知识地图</a>
+    </nav>
+</header>
+
+<div class="page-layout">
+    <aside class="sidebar">
+        <div class="sidebar-section-title">CSS3 扩展</div>
+        <button class="sidebar-nav-item active" data-css3="radius">
+            <span class="nav-icon">🔲</span><span class="nav-label">1. border-radius 圆角</span>
+        </button>
+        <button class="sidebar-nav-item" data-css3="shadow">
+            <span class="nav-icon">🌑</span><span class="nav-label">2. box-shadow 阴影</span>
+        </button>
+        <button class="sidebar-nav-item" data-css3="opacity">
+            <span class="nav-icon">👻</span><span class="nav-label">3. 透明度</span>
+        </button>
+        <button class="sidebar-nav-item" data-css3="gradient">
+            <span class="nav-icon">🌈</span><span class="nav-label">4. 渐变</span>
+        </button>
+        <button class="sidebar-nav-item" data-css3="border-image">
+            <span class="nav-icon">🖼️</span><span class="nav-label">5. border-image</span>
+        </button>
+        <button class="sidebar-nav-item" data-css3="multi-bg">
+            <span class="nav-icon">🧩</span><span class="nav-label">6. 多背景图像</span>
+        </button>
+
+        <div class="sidebar-section-title">其他模块</div>
+        <a href="box-model.html" class="sidebar-nav-item"><span class="nav-icon">📦</span><span class="nav-label">盒子模型</span></a>
+        <a href="float.html" class="sidebar-nav-item"><span class="nav-icon">🌊</span><span class="nav-label">浮动 Float</span></a>
+        <a href="display.html" class="sidebar-nav-item"><span class="nav-icon">🔀</span><span class="nav-label">Display 类型</span></a>
+        <a href="flexbox.html" class="sidebar-nav-item"><span class="nav-icon">📐</span><span class="nav-label">Flexbox</span></a>
+    </aside>
+
+    <main class="main-content">
+        <section class="section-panel active" id="section-main">
+            <div class="demo-layout">
+                
+                <!-- ================= 左侧可视化大屏 ================= -->
+                <div class="stage-wrapper">
+                    <div class="stage-label">CSS3 效果预览</div>
+                    <div class="stage" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 500px; padding: 20px;">
+                        
+                        <!-- 圆角演示盒 -->
+                        <div class="css3-demo-wrapper">
+                            <div class="css3-original-outline" id="css3OriginalOutline"></div>
+                            
+                            <div class="css3-render-box" id="css3DemoBox" style="border-color: #ffffff;">
+                                <div class="radius-circle circle-tl" id="radiusCircleTL">
+                                    <span class="radius-label" id="labelTL">r</span>
+                                </div>
+                                <div class="radius-circle circle-tr" id="radiusCircleTR">
+                                    <span class="radius-label" id="labelTR">r</span>
+                                </div>
+                                <div class="radius-circle circle-br" id="radiusCircleBR">
+                                    <span class="radius-label" id="labelBR">r</span>
+                                </div>
+                                <div class="radius-circle circle-bl" id="radiusCircleBL">
+                                    <span class="radius-label" id="labelBL">r</span>
+                                </div>
+                                <span class="css3-demo-text">CSS3 效果</span>
+                                <span class="css3-scale-flash" id="css3ScaleFlash"></span>
+                            </div>
+                        </div>
+
+                        <div class="scale-warning-bar" id="scaleWarning">
+                            <span>⚠️ 半径之和已超过盒子边长，CSS 已自动等比缩放半径！</span>
+                            <button class="btn-play-scale" id="btnPlayScale">▶ 播放归圆动画</button>
+                        </div>
+
+                        <!-- 九宫格 -->
+                        <div id="css3SliceArea" style="display: none; margin-top: 20px; width: 100%; justify-content: center; flex-direction: column; align-items: center;">
+                            <div class="slice-area-title">源图 · 九宫格切分</div>
+                            <div class="slice-stage">
+                                <div class="slice-source-wrapper" id="sliceSourceWrapper">
+                                    <img src="../img/icon.png" alt="源图" class="slice-source-img" id="sliceSourceImg">
+                                    <div class="slice-line slice-line-top" id="sliceLineTop"></div>
+                                    <div class="slice-line slice-line-right" id="sliceLineRight"></div>
+                                    <div class="slice-line slice-line-bottom" id="sliceLineBottom"></div>
+                                    <div class="slice-line slice-line-left" id="sliceLineLeft"></div>
+                                    <div class="slice-cell" data-cell="1">1</div>
+                                    <div class="slice-cell" data-cell="2">2</div>
+                                    <div class="slice-cell" data-cell="3">3</div>
+                                    <div class="slice-cell" data-cell="4">4</div>
+                                    <div class="slice-cell" data-cell="5">5</div>
+                                    <div class="slice-cell" data-cell="6">6</div>
+                                    <div class="slice-cell" data-cell="7">7</div>
+                                    <div class="slice-cell" data-cell="8">8</div>
+                                    <div class="slice-cell" data-cell="9">9</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm" id="playSliceAnim" style="margin-top: 12px;">▶ 播放边框填充动画</button>
+                        </div>
+
+                        <!-- =====================================================
+                             多背景图像：3D 分层舞台（放在左侧大屏下方）
+                             ===================================================== -->
+                        <div class="multi-bg-left-section" id="multiBgLeftSection" style="display: none;">
+                            <div class="multi-bg-stage-wrapper">
+                                <div class="stage-label" style="text-align: center; margin-bottom: 8px;">多背景图层 · 3D 分层舞台</div>
+                                <div class="multi-bg-stage" id="multiBgStage">
+                                    <div class="multi-bg-scene" id="multiBgScene">
+                                        <!-- 由 JS 动态生成图层平面 -->
+                                    </div>
+                                </div>
+                                <div class="multi-bg-stage-controls">
+                                    <button class="btn btn-secondary btn-sm" id="multiBgToggleView">🔄 切换视角</button>
+                                    <button class="btn btn-primary btn-sm" id="multiBgPlayInsert">▶ 播放插入动画</button>
+                                </div>
+                            </div>
+
+                            <!-- =================================================
+                                 动态案例：多背景拼图（放在 3D 舞台下方）
+                                 四块统一用 bg.png，通过 background-position
+                                 拼合成一张完整图片，中间加十字分割线
+                                 ================================================= -->
+                            <div class="multi-bg-puzzle-section">
+                                <h3 style="text-align: center;">🧩 动态案例：多背景拼图</h3>
+                                <p style="font-size: 12px; color: var(--text-secondary); margin: 8px 0 12px; text-align: center;">
+                                    四块使用同一张 <code>bg.png</code>，通过不同的 <code>background-position</code> 拼成一幅完整图案。
+                                </p>
+                                <div class="multi-bg-puzzle-stage">
+                                    <div class="multi-bg-puzzle-box" id="multiBgPuzzleBox">
+                                        <!-- 四块拼图由 JS 生成 -->
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                    <button class="btn btn-primary btn-sm" id="multiBgPuzzlePlay" style="flex: 1;">▶ 逐层插入</button>
+                                    <button class="btn btn-secondary btn-sm" id="multiBgPuzzleReset" style="flex: 1;">↺ 重置</button>
+                                </div>
+                                <div class="code-output" style="margin-top: 12px; font-size: 11px;" id="multiBgPuzzleCode"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 实时 CSS 代码 -->
+                    <div class="live-code-wrapper" style="margin-top: 16px;">
+                        <div class="live-code-title">实时 CSS 代码</div>
+                        <div class="code-output" id="css3LiveCode"></div>
+                    </div>
+                </div>
+
+                <!-- ================= 右侧控制面板 ================= -->
+                <div class="control-panel">
+                    
+                    <!-- 圆角 -->
+                    <div class="css3-control-group active" id="ctrl-radius">
+                        <h3>border-radius 圆角</h3>
+                        <div class="control-group">
+                            <label><span>单位</span><span class="value-display" id="valRadiusUnit">px</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-radius-unit="px">px</button>
+                                <button class="preset-btn" data-radius-unit="%">%（0-200）</button>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label><span>简写值数量</span><span class="value-display" id="valRadiusMode">1 值</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-radius-mode="1">1 值</button>
+                                <button class="preset-btn" data-radius-mode="2">2 值</button>
+                                <button class="preset-btn" data-radius-mode="3">3 值</button>
+                                <button class="preset-btn" data-radius-mode="4">4 值</button>
+                            </div>
+                        </div>
+                        <div id="radiusSliders" class="padding-sliders"></div>
+                        <div class="hint-box" style="margin-top: 16px;">
+                            <strong>💡 观察缩放：</strong>把滑块拉到 <code>100%</code> 甚至更高，虽然虚线圆在交叉，但真实的盒子依然是一个完美的圆形，因为浏览器底层阻止了圆角溢出。
+                            <br>把滑块拉到相邻角半径之和<strong>超过盒子边长</strong>时，会出现橙色提示条，点击 <strong>▶ 播放归圆动画</strong> 可以看到四个圆汇聚成浏览器真实渲染半径的过程。
+                        </div>
+                    </div>
+
+                    <!-- 阴影 -->
+                    <div class="css3-control-group" id="ctrl-shadow">
+                        <h3>box-shadow 阴影</h3>
+                        <div class="control-group">
+                            <label><span>阴影开关</span><span class="value-display" id="valShadow">关闭</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-shadow="none">无阴影</button>
+                                <button class="preset-btn" data-shadow="on">有阴影</button>
+                            </div>
+                        </div>
+                        <div id="shadowControls" class="shadow-controls">
+                            <div class="control-group">
+                                <label><span>h-shadow（水平偏移）</span><span class="value-display" id="valShadowH">0px</span></label>
+                                <input type="range" id="sliderShadowH" min="-30" max="30" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label><span>v-shadow（垂直偏移）</span><span class="value-display" id="valShadowV">10px</span></label>
+                                <input type="range" id="sliderShadowV" min="-30" max="30" value="10">
+                            </div>
+                            <div class="control-group">
+                                <label><span>blur（模糊半径）</span><span class="value-display" id="valShadowBlur">20px</span></label>
+                                <input type="range" id="sliderShadowBlur" min="0" max="60" value="20">
+                            </div>
+                            <div class="control-group">
+                                <label><span>color（阴影颜色）</span><span class="value-display" id="valShadowColor">#ffffff</span></label>
+                                <input type="color" id="inputShadowColor" value="#ffffff" style="width: 100%; height: 32px; border: 1px solid var(--bg-tertiary); border-radius: var(--radius-sm); background: none; cursor: pointer;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 透明度 -->
+                    <div class="css3-control-group" id="ctrl-opacity">
+                        <h3>透明度</h3>
+                        <div class="control-group">
+                            <label><span>实现方式</span><span class="value-display" id="valOpacityMode">opacity</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-opacity-mode="opacity">opacity</button>
+                                <button class="preset-btn" data-opacity-mode="rgba">rgba</button>
+                            </div>
+                        </div>
+
+                        <div id="opacityModePanel">
+                            <div class="control-group">
+                                <label><span>透明度（0 - 1）</span><span class="value-display" id="valOpacity">1.00</span></label>
+                                <input type="range" id="sliderOpacity" min="0" max="100" value="100" step="1">
+                            </div>
+                        </div>
+
+                        <div id="rgbaModePanel" style="display: none;">
+                            <div class="control-group">
+                                <label><span>R</span><span class="value-display" id="valRgbaR">30</span></label>
+                                <input type="range" id="sliderRgbaR" min="0" max="255" value="30">
+                            </div>
+                            <div class="control-group">
+                                <label><span>G</span><span class="value-display" id="valRgbaG">58</span></label>
+                                <input type="range" id="sliderRgbaG" min="0" max="255" value="58">
+                            </div>
+                            <div class="control-group">
+                                <label><span>B</span><span class="value-display" id="valRgbaB">95</span></label>
+                                <input type="range" id="sliderRgbaB" min="0" max="255" value="95">
+                            </div>
+                            <div class="control-group">
+                                <label><span>A（透明度）</span><span class="value-display" id="valRgbaA">1.00</span></label>
+                                <input type="range" id="sliderRgbaA" min="0" max="100" value="100">
+                            </div>
+                            <div class="control-group">
+                                <label><span>颜色预览</span></label>
+                                <div id="rgbaPreview" style="width: 100%; height: 40px; border-radius: var(--radius-sm); border: 1px solid var(--bg-tertiary); background: rgba(30,58,95,1);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 渐变 -->
+                    <div class="css3-control-group" id="ctrl-gradient">
+                        <h3>渐变</h3>
+                        <div class="control-group">
+                            <label><span>类型</span><span class="value-display" id="valGradient">无</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-gradient="none">无</button>
+                                <button class="preset-btn" data-gradient="linear">线性</button>
+                                <button class="preset-btn" data-gradient="radial">径向</button>
+                                <button class="preset-btn" data-gradient="repeating-linear">重复线性</button>
+                                <button class="preset-btn" data-gradient="repeating-radial">重复径向</button>
+                            </div>
+                        </div>
+                        <div id="gradientPanel" class="gradient-panel"></div>
+                    </div>
+
+                    <!-- 图片边框 -->
+                    <div class="css3-control-group" id="ctrl-border-image">
+                        <h3>border-image 图片边框</h3>
+
+                        <div class="hint-box" style="border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.08); color: #fbbf24;">
+                            <strong>⚠️ 前提条件：</strong>border-image 必须配合 border 使用。请先在下方设置边框样式、宽度和颜色。
+                        </div>
+
+                        <div class="control-group" style="margin-top: 16px;">
+                            <label><span>border 综合属性</span><span class="value-display" id="valBorderComposite">10px solid #ffffff</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-bg-border-style="solid">solid</button>
+                                <button class="preset-btn" data-bg-border-style="dashed">dashed</button>
+                                <button class="preset-btn" data-bg-border-style="dotted">dotted</button>
+                                <button class="preset-btn" data-bg-border-style="double">double</button>
+                                <button class="preset-btn" data-bg-border-style="none">none</button>
+                            </div>
+                            <label style="margin-top: 8px;"><span>border-width</span><span class="value-display" id="css3ValBorderWidth">10px</span></label>
+                            <input type="range" id="css3SliderBorderWidth" min="0" max="40" value="10">
+                        </div>
+
+                        <div class="control-group" style="margin-top: 16px;">
+                            <label><span>border-image-source</span><span class="value-display" id="valBorderImageSource">无</span></label>
+                            <div class="preset-btns preset-btns-wrap">
+                                <button class="preset-btn active" data-border-image-source="none">无</button>
+                                <button class="preset-btn" data-border-image-source="on">有</button>
+                            </div>
+                        </div>
+
+                        <div id="borderImagePanel" class="border-image-panel">
+                            <div class="control-group">
+                                <label><span>border-image-slice</span><span class="value-display" id="valBorderImageSlice">30%</span></label>
+                                <input type="range" id="sliderBorderImageSlice" min="5" max="50" value="30">
+                            </div>
+                            <div class="control-group">
+                                <label><span>border-image-repeat</span><span class="value-display" id="valBorderImageRepeat">repeat</span></label>
+                                <select id="selectBorderImageRepeat" class="mini-select" style="width: 100%; padding: 8px 12px; font-size: 12px;">
+                                    <option value="stretch">stretch（拉伸）</option>
+                                    <option value="repeat" selected>repeat（平铺裁切）</option>
+                                    <option value="round">round（平铺缩放）</option>
+                                    <option value="space">space（平铺留空）</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label><span>border-image-width</span><span class="value-display" id="valBorderImageWidth">1</span></label>
+                                <input type="range" id="sliderBorderImageWidth" min="1" max="10" value="1" step="1">
+                            </div>
+                            <div class="control-group">
+                                <label><span>border-image-outset</span><span class="value-display" id="valBorderImageOutset">0</span></label>
+                                <input type="range" id="sliderBorderImageOutset" min="0" max="30" value="0">
+                            </div>
+                            <div class="toggle-row">
+                                <span>border-image-slice 加 fill</span>
+                                <button class="toggle-switch" id="toggleBorderImageFill"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 多背景图像（右侧只保留控制） -->
+                    <div class="css3-control-group" id="ctrl-multi-bg">
+                        <h3>多背景图像 background-image</h3>
+                        <div class="hint-box" style="margin-bottom: 16px;">
+                            <strong>💡 核心：</strong>CSS 允许用<strong>逗号分隔</strong>声明多个背景图。多个图层<strong>从后往前叠加</strong>：第一个在最上层，最后一张在最底层。每层可独立控制位置、大小、平铺方式。
+                        </div>
+
+                        <div class="control-group">
+                            <label><span>图层数量</span><span class="value-display" id="valMultiBgCount">3</span></label>
+                            <input type="range" id="sliderMultiBgCount" min="1" max="4" value="3" step="1">
+                        </div>
+
+                        <div id="multiBgLayers"></div>
+
+                        <div class="code-output" style="margin-top: 16px;">
+                            <span class="code-line"><span class="sel">.box</span> <span class="brace">{</span></span>
+                            <span class="code-line">  <span class="prop">background-image</span>: <span class="val" id="codeMultiBgImage">...</span>;</span>
+                            <span class="code-line">  <span class="prop">background-position</span>: <span class="val" id="codeMultiBgPosition">...</span>;</span>
+                            <span class="code-line">  <span class="prop">background-size</span>: <span class="val" id="codeMultiBgSize">...</span>;</span>
+                            <span class="code-line">  <span class="prop">background-repeat</span>: <span class="val" id="codeMultiBgRepeat">...</span>;</span>
+                            <span class="code-line"><span class="brace">}</span></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+		<div class="ai-code-checker" style="margin-top: 16px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+		    <h4 style="color: var(--accent-cyan); font-size: 14px; margin-bottom: 8px;">🤖 AI 代码诊断导师</h4>
+		    <textarea id="ai-code-input" rows="3" style="width: 100%; background: #1e293b; color: #fff; border: 1px solid #334155; border-radius: 4px; padding: 8px; font-family: monospace; font-size: 13px;" placeholder="在此输入你的 CSS 代码，例如：&#10;.box { width: 200px; padding: 20px; }"></textarea>
+		    <button id="ai-check-btn" class="btn btn-primary" style="margin-top: 8px; font-size: 12px;">运行 AI 诊断</button>
+		    <div id="ai-check-result" style="margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);"></div>
+		</div>
+    </main>
+</div>
+
+<script type="module">
+	import { initAIAssistant } from '../js/components/ai-assistant.js';
+	initAIAssistant();
+	
+    import { initCss3Module } from '../js/modules/css3.js';
+    initCss3Module();
+</script>
+</body>
+</html>
